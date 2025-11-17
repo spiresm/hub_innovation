@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Tech Innovation Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        :root {
+            --bs-primary: #007bff;
+            --bs-secondary: #6c757d;
+            --bs-success: #28a745;
+            --bs-warning: #ffc107;
+            --bs-info: #17a2b8;
+            --bs-light: #f8f9fa;
+            --bs-background-light: #f1f2f7; 
+        }
+        /* Utilisation de la nouvelle police et fond */
+        body { 
+            background-color: var(--bs-background-light); 
+            font-family: 'Poppins', sans-serif; 
+        } 
+        /* SUPPRESSION DE .navbar ici et du bloc NAV dans le body */
+        .kpi-card { 
+            border: none; 
+            border-radius: 0.75rem; 
+            box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,.075);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: white; 
+        }
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);
+        }
+        .kpi-card .icon { font-size: 2.5rem; }
+        
+        .hero-card { 
+            background: linear-gradient(135deg, var(--bs-primary), #004d99); 
+            color: white;
+            border-radius: 0.75rem; 
+            padding: 2.5rem;
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);
+        }
+
+        .chart-container {
+            padding: 1.5rem;
+            background-color: white;
+            border-radius: 0.75rem; 
+            box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,.1); 
+            height: 100%;
+            transition: all 0.3s ease; 
+        }
+        .chart-container:hover {
+            transform: translateY(-3px); 
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15); 
+        }
+        
+        .gauge-placeholder {
+            width: 100%;
+            max-width: 140px;
+            height: 70px; 
+            background: conic-gradient(var(--bs-success) 0deg 216deg, #eee 216deg 360deg); 
+            border-radius: 140px 140px 0 0; 
+            margin: 0.5rem auto 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .gauge-inner-circle {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px; 
+            height: 120px; 
+            background-color: white; 
+            border-radius: 50%;
+            z-index: 5;
+        }
+        
+        .funnel-step {
+            color: white;
+            text-align: center;
+            padding: 10px 15px;
+            margin: 10px auto;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding-left: 20px; 
+            padding-right: 20px;
+        }
+        .funnel-step:hover {
+            opacity: 0.9;
+            transform: scale(1.01);
+        }
+        .funnel-step.bg-warning {
+             color: #343a40 !important;
+        }
+        
+        .matrix-container {
+            position: relative;
+            height: 350px;
+            border-radius: 0.5rem;
+            background-color: #ffffff; 
+            border: 1px solid #dee2e6;
+            margin-top: 2rem;
+        }
+        .matrix-container::before, .matrix-container::after {
+            content: '';
+            position: absolute;
+            background-color: #dee2e6;
+        }
+        .matrix-container::before { 
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            margin-top: -0.5px;
+        }
+        .matrix-container::after { 
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            margin-left: -0.5px;
+        }
+        .matrix-label {
+            position: absolute;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #495057;
+        }
+        .matrix-project-dot {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.7);
+            z-index: 10;
+        }
+        .matrix-quadrant-title {
+            position: absolute;
+            font-size: 0.8rem;
+            font-weight: bold;
+            padding: 0.25rem;
+            opacity: 0.8;
+        }
+
+        .progress-bar { transition: width 0.8s ease-out; }
+        .progress-bar-capacity { height: 25px; background-color: #e9ecef; border-radius: 0.375rem; margin-top: 5px; overflow: hidden; }
+        .progress-bar-capacity .progress-bar { border-radius: 0.375rem; }
+        .progress-bar-label { position: absolute; left: 0; padding-left: 0.5rem; color: #212529; font-size: 0.85rem; font-weight: bold; z-index: 10; transform: translateY(-1.75rem); text-decoration: none; }
+        .progress-bar-label:hover { color: var(--bs-primary); text-decoration: underline; }
+        .bar-wrapper { margin-bottom: 2.5rem; position: relative; }
+
+        .alert-card { border-left: 5px solid var(--bs-danger); }
+        .alert-dot-critical { color: white; background-color: #dc3545; padding: 4px 8px; border-radius: 0.25rem; font-size: 0.75rem; font-weight: bold; }
+
+        .project-link { text-decoration: none; }
+        .project-link:hover { text-decoration: underline; }
+        
+    </style>
+</head>
+<body class="bg-body-tertiary">
+    <div id="header"></div>
+    <script>
+        fetch("header.html")
+            .then(res => res.text())
+            .then(html => { document.getElementById("header").innerHTML = html; });
+    </script>
+
+    <div class="container my-5 pt-5">
+        <h1 class="fw-bolder mb-1">Tableau de Bord de l'Innovation HIT</h1>
+        <p class="text-muted mb-4">Aperçu stratégique du portefeuille d'innovation Technos.</p>
+        
+        <div class="row mb-5">
+            <div class="col-lg-12">
+                <div class="input-group input-group-lg kpi-card">
+                    <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
+                    <input type="text" class="form-control border-start-0" 
+                           placeholder="Rechercher un projet, un responsable, ou un mot-clé (ex: IA, Mobile)..." 
+                           id="global-search-input">
+                    <button class="btn btn-secondary" type="button"><i class="fas fa-filter me-2"></i>Filtres</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-4 g-4 mb-5">
+            <div class="col">
+                <div class="card kpi-card p-4 text-center h-100 d-flex flex-column justify-content-center">
+                    <i class="fas fa-project-diagram text-primary icon my-2"></i>
+                    <div class="card-body p-0">
+                        <h3 class="card-title fw-bold mb-0">19</h3>
+                        <p class="text-muted small">Projets Totaux</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card kpi-card p-4 text-center h-100 d-flex flex-column justify-content-center">
+                    <i class="fas fa-check-circle text-success icon my-2"></i>
+                    <div class="card-body p-0">
+                        <h3 class="card-title fw-bold mb-0">32%</h3>
+                        <p class="text-muted small">Taux d'Avancement (Validé/POC)</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col">
+                <div class="card kpi-card p-4 text-center bg-white h-100 d-flex flex-column justify-content-between">
+                    <p class="text-muted small fw-bold mb-1">Santé Globale du Portefeuille</p>
+                    <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center py-2">
+                        <div class="gauge-placeholder">
+                            <div class="gauge-placeholder">
+                                <div class="gauge-inner-circle"></div>
+                            </div>
+                        </div>
+                        <h3 class="card-title fw-bold mt-2 text-success">
+                            <span id="gauge-value">80%</span>
+                        </h3>
+                    </div>
+                    <p class="text-muted small mb-0">Objectif atteint</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card kpi-card p-4 text-center h-100 d-flex flex-column justify-content-center">
+                    <i class="fas fa-lightbulb text-info icon my-2"></i>
+                    <div class="card-body p-0">
+                        <h3 class="card-title fw-bold mb-0">6</h3>
+                        <p class="text-muted small">Idées à Analyser (Backlog)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mb-5">
+            <div class="col-lg-8">
+                <div class="hero-card">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-trophy fa-3x me-4"></i>
+                        <div>
+                            <span class="badge bg-light text-primary mb-2 fw-bold">🏆 Succès Récent</span>
+                            <h3 class="fw-bold mb-1">
+                                <a href="fiche-projet.html?id=H25008" class="text-white project-link">MIA (LLM Co-pilot) : Déploiement Validé</a>
+                            </h3>
+                            <p class="lead mb-3">
+                                L'agent conversationnel utilisant le LLM est maintenant intégré à MediaSphere. Il offre des réponses contextualisées et augmente l'efficacité des équipes de 15%.
+                            </p>
+                            <a href="fiche-projet.html?id=H25008" class="btn btn-outline-light btn-sm fw-bold">Voir l'Impact <i class="fas fa-arrow-right ms-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card kpi-card h-100 p-4">
+                    <h5 class="fw-bold text-primary mb-3"><i class="fas fa-calendar-alt me-2"></i> Prochain Jalons Clés</h5>
+                    
+                    <div class="d-flex align-items-start mb-3">
+                        <div class="text-success me-3 pt-1">
+                            <i class="fas fa-calendar-check fa-lg"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold small mb-0 text-success">01/07/2025</div>
+                            <p class="mb-0 small">
+                                <a href="fiche-projet.html?id=H25005" class="text-dark project-link">Début Diffusion Légère Mobile (H25005)</a>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex align-items-start mb-3">
+                        <div class="text-success me-3 pt-1">
+                            <i class="fas fa-calendar-check fa-lg"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold small mb-0 text-success">30/08/2025</div>
+                            <p class="mb-0 small">
+                                <a href="fiche-projet.html?id=H25011" class="text-dark project-link">POC final Les yeux de Samia (H25011)</a>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-start mb-3">
+                        <div class="text-success me-3 pt-1">
+                            <i class="fas fa-calendar-check fa-lg"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold small mb-0 text-success">30/10/2025</div>
+                            <p class="mb-0 small">
+                                <a href="fiche-projet.html?id=H25007" class="text-dark project-link">Fin Conformité R128 Musiq3 (H25007)</a>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-start">
+                        <div class="text-muted me-3 pt-1">
+                            <i class="fas fa-calendar-day fa-lg"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold small mb-0 text-muted">15/12/2025</div>
+                            <p class="mb-0 small">
+                                <a href="fiche-projet.html?id=H25014" class="text-dark project-link">Clôture Plateforme Contenus (H25014)</a>
+                            </p>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-5">
+             <div class="col-lg-6">
+                <h4 class="fw-bold text-danger mb-3"><i class="fas fa-exclamation-triangle me-2"></i> Alertes & Projets en Tension</h4>
+                <div class="card kpi-card p-4 h-100">
+                    
+                    <div class="d-flex align-items-center mb-3 p-2 alert-card border-danger filterable-item-alert">
+                        <div class="text-danger me-3 pt-1">
+                            <i class="fas fa-clock fa-lg"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold small mb-0">
+                                <a href="fiche-projet.html?id=H25006" class="text-dark project-link">H25006 - Flux 4G (POC)</a>
+                            </div>
+                            <p class="mb-0 text-muted small">Retard de 2 semaines, cause : Dépendances réseau non livrées.</p>
+                            <span class="alert-dot-critical">CRITIQUE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center mb-3 p-2 alert-card border-warning filterable-item-alert">
+                        <div class="text-warning me-3 pt-1">
+                            <i class="fas fa-user-times fa-lg"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold small mb-0">
+                                <a href="fiche-projet.html?id=H25001" class="text-dark project-link">H25001 - Jean-Paul IA (Exploration)</a>
+                            </div>
+                            <p class="mb-0 text-muted small">Responsable (LEL) à 100% de charge pour le mois d'août.</p>
+                            <span class="badge bg-warning text-dark">RESSOURCE TENDUE</span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center p-2 alert-card border-info filterable-item-alert">
+                        <div class="text-info me-3 pt-1">
+                            <i class="fas fa-calendar-check fa-lg"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold small mb-0">
+                                <a href="fiche-projet.html?id=H25005" class="text-dark project-link">H25005 - Diffusion Mobile (POC)</a>
+                            </div>
+                            <p class="mb-0 text-muted small">Échéance (01/07) imminente. Vérification du Go/No Go nécessaire.</p>
+                            <span class="badge bg-info">ACTION IMMÉDIATE</span>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="chart-container">
+                    <h4 class="fw-bold text-primary mb-2"><i class="fas fa-handshake me-2"></i> Charge de Travail par Responsable</h4>
+                    <p class="small text-muted mb-4">Allocation de Jours/Homme sur la période H2 2025.</p>
+                    
+                    <div class="bar-wrapper mt-4">
+                        <a href="equipe.html#LEL" class="progress-bar-label">LEL</a>
+                        <div class="progress-bar-capacity">
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: 81.8%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="110">
+                                <span class="float-end pe-2 text-white">90 J/H (82%)</span>
+                            </div>
+                        </div>
+                        <p class="small text-muted text-end mt-1">Capacité Max : 110 J/H</p>
+                    </div>
+                    
+                    <div class="bar-wrapper">
+                        <a href="equipe.html#ABRU" class="progress-bar-label">ABRU</a>
+                        <div class="progress-bar-capacity">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 40.9%" aria-valuenow="45" aria-valuemin="0" aria-valuemax="110">
+                                <span class="float-end pe-2 text-white">45 J/H (41%)</span>
+                            </div>
+                        </div>
+                        <p class="small text-muted text-end mt-1">Capacité Max : 110 J/H</p>
+                    </div>
+                    
+                    <div class="bar-wrapper">
+                        <a href="equipe.html#AHH" class="progress-bar-label">AHH</a>
+                        <div class="progress-bar-capacity">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 18.2%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="110">
+                                <span class="float-end pe-2 text-dark">20 J/H (18%)</span>
+                            </div>
+                        </div>
+                        <p class="small text-muted text-end mt-1">Capacité Max : 110 J/H</p>
+                    </div>
+                    
+                    <div class="bar-wrapper">
+                        <a href="equipe.html#VAH" class="progress-bar-label">VAH</a>
+                        <div class="progress-bar-capacity">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: 13.6%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="110">
+                                <span class="float-end pe-2 text-dark">15 J/H (14%)</span>
+                            </div>
+                        </div>
+                        <p class="small text-muted text-end mt-1">Capacité Max : 110 J/H</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-5">
+            <div class="col-lg-6">
+                 <h4 class="fw-bold text-primary mb-3"><i class="fas fa-history me-2"></i> Échéancier Visuel des POC</h4>
+                <div class="card kpi-card p-4 h-100">
+                    <div class="timeline-item mb-3 filterable-item-timeline">
+                        <a href="fiche-projet.html?id=H25005" class="small fw-bold text-primary project-link d-block">H25005 Diffusion Légère Mobile (POC)</a>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <p class="text-muted small mt-1">Échéance : 01/07/2025</p>
+                    </div>
+                    <div class="timeline-item mb-3 filterable-item-timeline">
+                        <a href="fiche-projet.html?id=H25008" class="small fw-bold text-success project-link d-block">H25008 MIA (Validé)</a>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 85%" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <p class="text-muted small mt-1">Échéance : 30/08/2025 (Déploiement en cours)</p>
+                    </div>
+                    <div class="timeline-item mb-0 filterable-item-timeline">
+                        <a href="fiche-projet.html?id=H25011" class="small fw-bold text-primary project-link d-block">H25011 Les yeux de Samia (POC En Cours)</a>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <p class="text-muted small mt-1">Échéance : 30/08/2025</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="chart-container h-100">
+                    <h4 class="fw-bold text-primary mb-3"><i class="fas fa-bullseye me-2"></i> Matrice de Priorisation Risque/Opportunité</h4>
+                    <p class="small text-muted mb-0">Positionnement des projets actifs sur les axes de complexité (Risque) et d'impact (Opportunité).</p>
+                    
+                    <div class="matrix-container">
+                        <div class="matrix-quadrant-title text-danger" style="top: 0.5rem; right: 0.5rem;">HAUT IMPACT / HAUT RISQUE</div>
+                        <div class="matrix-quadrant-title text-success" style="top: 0.5rem; left: 0.5rem;">FAIBLE IMPACT / HAUT RISQUE</div>
+                        <div class="matrix-quadrant-title text-primary" style="bottom: 0.5rem; right: 0.5rem;">HAUT IMPACT / FAIBLE RISQUE</div>
+                        <div class="matrix-quadrant-title text-secondary" style="bottom: 0.5rem; left: 0.5rem;">FAIBLE IMPACT / FAIBLE RISQUE</div>
+                        
+                        <div class="matrix-label" style="top: 5px; left: 50%; transform: translateX(-50%);">Opportunité Élevée <i class="fas fa-arrow-up"></i></div>
+                        <div class="matrix-label" style="bottom: 5px; left: 50%; transform: translateX(-50%);">Opportunité Faible <i class="fas fa-arrow-down"></i></div>
+                        <div class="matrix-label" style="top: 50%; left: 5px; transform: translateY(-50%) rotate(-90deg) translateX(-50%);">Risque Faible <i class="fas fa-arrow-left"></i></div>
+                        <div class="matrix-label" style="top: 50%; right: 5px; transform: translateY(-50%) rotate(90deg) translateX(-50%);">Risque Élevé <i class="fas fa-arrow-right"></i></div>
+                        
+
+                        <div class="matrix-project-dot bg-danger" style="top: 10%; right: 15%;" title="H25006 - Flux 4G (Risque Élevé, Impact Élevé)"></div>
+                        <div class="matrix-project-dot bg-primary" style="bottom: 10%; right: 40%;" title="H25008 - MIA (Quick Win) (Risque Faible, Impact Élevé)"></div>
+                        <div class="matrix-project-dot bg-success" style="top: 25%; left: 30%;" title="H25001 - Jean-Paul IA (Risque Élevé, Impact Faible)"></div>
+                        <div class="matrix-project-dot bg-secondary" style="bottom: 20%; left: 25%;" title="H25014 - Plateforme Contenus (Risque Faible, Impact Faible)"></div>
+                        <div class="matrix-project-dot bg-info" style="top: 40%; right: 30%;" title="H25011 - Samia (Risque Élevé, Impact Moyen)"></div>
+                        <div class="matrix-project-dot bg-warning" style="bottom: 30%; right: 10%;" title="H25007 - Conformité Musiq3 (Risque Faible, Impact Moyen)"></div>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card kpi-card h-100 p-4">
+                    <h5 class="fw-bold text-success mb-3"><i class="fas fa-trophy me-2"></i> Mur de la Reconnaissance</h5>
+                    <p class="small text-muted mb-3 border-bottom pb-2">Les succès récents du trimestre (Q2 2025) :</p>
+                    
+                    <div class="d-flex align-items-center success-item mb-3">
+                        <div class="text-success me-3"><i class="fas fa-medal fa-2x"></i></div>
+                        <div>
+                            <p class="fw-bold mb-0 small text-dark">Lancement réussi : **MIA (H25008)**</p>
+                            <span class="badge bg-success">ÉQUIPE : VAH, LEL</span>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center success-item mb-3">
+                        <div class="text-primary me-3"><i class="fas fa-star fa-2x"></i></div>
+                        <div>
+                            <p class="fw-bold mb-0 small text-dark">Idée la plus prometteuse : **Vision X**</p>
+                            <span class="badge bg-primary">CONTRIBUTEUR : AHH</span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center success-item">
+                        <div class="text-info me-3"><i class="fas fa-award fa-2x"></i></div>
+                        <div>
+                            <p class="fw-bold mb-0 small text-dark">Meilleure Documentation de POC</p>
+                            <span class="badge bg-info">ÉQUIPE : ABRU</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 text-center">
+                        <a href="#" class="btn btn-outline-secondary btn-sm"><i class="fas fa-eye me-2"></i> Voir tous les succès passés</a>
+                    </div>
+                </div>
+            </div>
+             <div class="col-lg-8">
+                <div class="chart-container kpi-card h-100 p-4 funnel-chart">
+                    <h4 class="fw-bold text-primary mb-3"><i class="fas fa-funnel-dollar me-2"></i> Tunnel de Conversion de l'Innovation</h4>
+                    <p class="small text-muted mb-4">Suivi du taux de conversion des idées en projets déployés.</p>
+                    
+                    <div class="funnel-step bg-info" style="width: 90%;">
+                        Idées Soumises (30)
+                    </div>
+                    <div class="funnel-step bg-primary" style="width: 70%;">
+                        Analyse & Validation (21) - **Taux de Conversion 70%**
+                    </div>
+                    <div class="funnel-step bg-warning" style="width: 45%;">
+                        POC/Exploration (13) - **Taux de Conversion 62%**
+                    </div>
+                    <div class="funnel-step bg-success" style="width: 25%;">
+                        Déploiements (7) - **Taux de Conversion 54%**
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('global-search-input');
+            
+            if (!searchInput) {
+                console.error("Erreur: L'élément d'entrée de recherche (ID: global-search-input) est introuvable.");
+                return;
+            }
+
+            const filterableTimelineItems = document.querySelectorAll('.filterable-item-timeline');
+            const filterableAlertItems = document.querySelectorAll('.filterable-item-alert');
+            
+            const allFilterableItems = [...filterableTimelineItems, ...filterableAlertItems];
+
+            function applyDashboardFilter() {
+                const query = searchInput.value.toLowerCase().trim();
+                
+                allFilterableItems.forEach(item => {
+                    const itemText = item.textContent.toLowerCase();
+                    
+                    if (itemText.includes(query) || query === '') {
+                        if (item.classList.contains('filterable-item-alert')) {
+                            item.style.display = 'flex'; 
+                        } else {
+                            item.style.display = 'block'; 
+                        }
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }
+
+            searchInput.addEventListener('input', applyDashboardFilter);
+            searchInput.addEventListener('paste', () => setTimeout(applyDashboardFilter, 0));
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>

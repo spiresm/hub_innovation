@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Fiche Projet</title> 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        :root {
+            --bs-primary: #007bff;
+            --bs-light: #f8f9fa;
+            --bs-success: #28a745;
+            --bs-warning: #ffc107;
+            --bs-info: #17a2b8;
+            --bs-danger: #dc3545;
+        }
+        body { background-color: var(--bs-light); }
+        .navbar { background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,.05); }
+
+        .project-detail-header {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,.1);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+        
+        .header-illustration {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-bottom: 3px solid var(--bs-primary);
+        }
+
+        .header-illustration-placeholder {
+            height: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+            color: #ccc;
+        }
+
+        .info-block {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,.1);
+            margin-bottom: 1.5rem;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #6c757d; /* Gris par défaut */
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+            /* Couleurs génériques pour les avatars basées sur les initiales pour un petit style */
+        }
+        .avatar[data-initials="L"] { background-color: var(--bs-primary); }
+        .avatar[data-initials="H"] { background-color: var(--bs-success); }
+        .avatar[data-initials="T"] { background-color: var(--bs-info); }
+        .avatar[data-initials="A"] { background-color: var(--bs-warning); }
+        .avatar[data-initials="C"] { background-color: var(--bs-danger); }
+        .avatar[data-initials="E"] { background-color: #6f42c1; } /* Violet */
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg sticky-top mb-4">
+        <div class="container-fluid container-lg">
+            <a class="navbar-brand fw-bold text-primary" href="registre.html"><i class="fas fa-arrow-left me-2"></i> Retour au Registre</a>
+            <span class="navbar-text ms-auto">
+                <span id="project-id" class="text-secondary small me-2"></span>
+                <span id="project-status-badge" class="badge rounded-pill bg-secondary"></span>
+            </span>
+        </div>
+    </nav>
+
+    <div class="container-lg">
+        <div class="row">
+            <div class="col-lg-8">
+                
+                <div class="project-detail-header">
+                    <div id="project-header-image" class="text-center">
+                        </div>
+                    <div class="p-4">
+                        <h1 id="project-nom" class="fw-bold text-dark"></h1>
+                        <p id="project-description-courte" class="lead text-muted"></p>
+
+                        <h6 class="mt-4 mb-2">Progression du Projet</h6>
+                        <div class="progress" role="progressbar" aria-label="Progression" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="height: 20px;">
+                            <div id="progress-bar-fill" class="progress-bar" style="width: 0%;">
+                                <span id="progress-bar-text">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-block">
+                    <h4><i class="fas fa-align-left me-2"></i> Description Détaillée</h4>
+                    <p id="project-description-detaillee" class="text-secondary">
+                        </p>
+                </div>
+
+                <div class="info-block">
+                    <h4><i class="fas fa-tags me-2"></i> Mots-Clés</h4>
+                    <div id="keywords-list">
+                        </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+
+                <div class="info-block">
+                    <h4><i class="fas fa-info-circle me-2"></i> Informations Clés</h4>
+                    <div class="mb-2"><strong><i class="fas fa-calendar-alt me-2"></i> Échéance:</strong> <span id="project-echeance"></span></div>
+                    <div class="mb-2"><strong><i class="fas fa-tag me-2"></i> Contribution:</strong> <span id="project-contribution"></span></div>
+                    <div class="mb-2"><strong><i class="fas fa-list-ol me-2"></i> ID Projet:</strong> <span id="project-id"></span></div>
+                </div>
+
+                <div class="info-block">
+                    <h4><i class="fas fa-users me-2"></i> L'Équipe du Projet</h4>
+                    <div id="team-members-list">
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DONNÉES DE PROJETS ENRICHIES (Copie conforme du registre pour la cohérence)
+        const projectsData = [
+            { 
+                id: "H25001", nom: "Jean-Paul IA", description_courte: "LLM technodoc", statut: "Non démarré", responsable: "HMA", contribution: "Stratégie", echeance: "30/06/2026", icon: "fas fa-brain", image_id: "images/jean_paul_ia.jpg", progression: 60,
+                description_detaillee: "Le projet Jean-Paul IA vise à intégrer un grand modèle de langage (LLM) dans l'environnement intranet pour faciliter l'accès à la documentation technique, la recherche rapide et la génération de résumés complexes. L'objectif est d'améliorer l'efficacité des équipes de support et de développement en fournissant des réponses instantanées et précises basées sur notre base de connaissances interne. Le POC initial se concentre sur l'indexation des documents de production.",
+                equipe: [{initiales: "LEL", nom: "Laura ELM", role: "Chef de Projet"}, {initiales: "HMA", nom: "Hugo MAUX", role: "Coach IA"}, {initiales: "TFG", nom: "Thierry GAUDIER", role: "Développeur Principal"}], 
+                mots_cles: ["IA", "LLM", "Documentation", "Intranet", "Technologie"]
+            },
+            { 
+                id: "H25002", nom: "Cuno.IO", description_courte: "Émuler un stockage local depuis un bucket S3 pour la veille technique.", statut: "Non démarré", responsable: "LEL", contribution: "Stratégie", echeance: "N/A", icon: "fas fa-cloud-upload-alt", image_id: "images/cuno_io.jpg", progression: 0,
+                description_detaillee: "Ce projet est une veille technologique visant à explorer des solutions permettant d'émuler un système de fichiers local basé sur un stockage objet cloud (S3). Le but est de simplifier l'accès aux données pour les outils legacy sans nécessiter une réarchitecture complète. Actuellement en phase d'évaluation des produits open source disponibles.",
+                equipe: [{initiales: "LEL", nom: "Laura ELM", role: "Porteur du sujet"}],
+                mots_cles: ["Cloud", "S3", "Stockage", "Veille", "Open Source"]
+            },
+            { 
+                id: "H25003", nom: "Segmentation Programme CGO", description_courte: "Segmentation du Programme CGO pour optimiser les ressources et les objectifs.", statut: "Idée à Analyser", responsable: "LEL", contribution: "Projet", echeance: "N/A", icon: "fas fa-chart-pie", image_id: "images/segmentation_cgo.jpg", progression: 10,
+                description_detaillee: "Analyse préliminaire nécessaire pour segmenter et prioriser les différentes composantes du Programme CGO. L'objectif est de définir des lots de travail clairs et mesurables pour une meilleure gestion du portefeuille de projets et une allocation plus efficace du budget.",
+                equipe: [{initiales: "LEL", nom: "Laura ELM", role: "Chef de Projet"}, {initiales: "ABRU", nom: "Alice BRUN", role: "PMO"}],
+                mots_cles: ["Programme", "Gestion", "Portefeuille", "Analyse"]
+            },
+            { 
+                id: "H25004", nom: "Vitrine", description_courte: "Automatiser la création et la publication des vitrines Marketing.", statut: "Clôturée", responsable: "ABRU", contribution: "Marketing", echeance: "08/10/2025", icon: "fas fa-desktop", image_id: "images/vitrines.jpg", progression: 100,
+                description_detaillee: "Projet clos. Mise en place d'un outil CI/CD et of templates pour automatiser la création et le déploiement des sites vitrines (marketing) avec un minimum d'intervention manuelle. L'objectif d'accélération de la mise sur le marché a été atteint. Les outils sont désormais en production.",
+                equipe: [{initiales: "ABRU", nom: "Alice BRUN", role: "Responsable Marketing"}, {initiales: "TFG", nom: "Thierry GAUDIER", role: "Intégrateur"}],
+                mots_cles: ["Marketing", "Automatisation", "CI/CD", "Web"]
+            },
+            { 
+                id: "H25005", nom: "Diffusion Légère Mobile", description_courte: "Valider l'utilisation d'éléments mobiles dans le contexte de diffusion.", statut: "POC", responsable: "LEL", contribution: "Diffusion", echeance: "01/07/2025", icon: "fas fa-mobile-alt", image_id: "images/connection_mobile.jpg", progression: 40,
+                description_detaillee: "Mener un POC (Proof of Concept) pour évaluer la fiabilité et la qualité de la diffusion en direct via des équipements légers et mobiles (smartphones, petits émetteurs 4G/5G). L'étude inclut des tests de latence et de robustesse du signal en conditions réelles. Un rapport final est attendu pour l'été.",
+                equipe: [{initiales: "LEL", nom: "Laura ELM", role: "Chef de Projet"}, {initiales: "ETRHO", nom: "Eric RHO", role: "Technicien Diffusion"}], 
+                mots_cles: ["Diffusion", "Mobile", "4G/5G", "POC", "Streaming"]
+            },
+            { 
+                id: "H25006", nom: "Garantir flux 4G Radio Légère", description_courte: "parfois le signal 4G est saturé. Autre proposition...", statut: "Non démarré", responsable: "LEL", contribution: "Veille", echeance: "N/A", icon: "fas fa-broadcast-tower", image_id: "images/flux4g.jpg", progression: 0,
+                description_detaillee: "Face à la saturation ponctuelle du réseau 4G pour les unités de reportage légères, cette veille étudie des solutions d'agrégation de liens et de QoS (Quality of Service) pour garantir la stabilité et le débit des flux Radio. Les technologies de bonding sont la cible principale.",
+                equipe: [{initiales: "LEL", nom: "Laura ELM", role: "Porteur du sujet"}],
+                mots_cles: ["4G", "Radio", "Réseau", "QoS", "Bonding"]
+            },
+            { 
+                id: "H25007", nom: "Conformité R128 Musiq3", description_courte: "Mise en conformité des contenus audio de Musiq3 à la norme R128 (Loudness).", statut: "Non démarré", responsable: "CPU", contribution: "Stratégie", echeance: "30/10/2025", icon: "fas fa-volume-up", image_id: "images/conformite_r128.jpg", progression: 80,
+                description_detaillee: "Standardisation du niveau sonore (Loudness) des programmes de la chaîne Musiq3 selon la norme EBU R128. Ceci implique la mise à jour des workflows de post-production et l'acquisition d'outils de mesure pour garantir une expérience d'écoute homogène. Phase d'intégration en cours.",
+                equipe: [{initiales: "CPU", nom: "Claire POU", role: "Chef de Projet"}, {initiales: "ETRHO", nom: "Eric RHO", role: "Expert Audio"}],
+                mots_cles: ["Audio", "R128", "Loudness", "Production", "Conformité"]
+            },
+            { 
+                id: "H25008", nom: "MIA (LLM Co-pilot)", description_courte: "Utilisation d'un agent IA type copilot et d'un répertoire dans sharepoint pour valider le concept.", statut: "En concept", responsable: "LEL", contribution: "Stratégie", echeance: "30/08/2025", icon: "fas fa-robot", image_id: "images/mia_llm.jpg", progression: 80,
+                description_detaillee: "Mise en place d'un chatbot 'MIA' basé sur un LLM (Large Language Model) capable d'interagir avec les utilisateurs pour répondre à des questions spécifiques sur la plateforme MediaSphere, simulant un co-pilote d'assistance technique. Le projet est en phase de test utilisateur avancé.",
+                equipe: [{initiales: "LEL", nom: "Laura ELM", role: "Chef de Projet"}, {initiales: "HMA", nom: "Hugo MAUX", role: "Expert IA"}, {initiales: "TFG", nom: "Thierry GAUDIER", role: "Développeur"}],
+                mots_cles: ["IA", "Chatbot", "LLM", "MediaSphere", "Assistance"]
+            },
+            { 
+                id: "H25009", nom: "AI driven voice e...", description_courte: "Mettre en place un outil capable de répondre à différentes questions à l'aide d'une interface avec un avatar.", statut: "Idée", responsable: "LEL", contribution: "Veille", echeance: "N/A", icon: "fas fa-headset", image_id: "images/ai_voice_editing.jpg", progression: 5,
+                description_detaillee: "Veille sur les technologies d'avatars et de synthèse vocale basées sur l'IA. L'objectif est d'étudier la faisabilité d'une interface utilisateur conversationnelle et visuelle pour des applications internes ou grand public. Le sujet est à un stade très précoce (simple idée).",
+                equipe: [{initiales: "LEL", nom: "Laura ELM", role: "Porteur du sujet"}],
+                mots_cles: ["IA", "Avatar", "Synthèse Vocale", "Veille", "UX"]
+            },
+            { 
+                id: "H25010", nom: "Bornes d'Apport Autonome", description_courte: "Création d'un prototype de borne d'apport autonome.", statut: "Clôturée", responsable: "ABRU", contribution: "Projet", echeance: "17/09/2025", icon: "fas fa-box-open", image_id: "images/bornes_autonomes.jpg", progression: 100,
+                description_detaillee: "Projet clos. Conception et réalisation d'un prototype de borne permettant l'apport de contenus par des contributeurs externes sans assistance humaine, simplifiant les workflows d'acquisition. Le prototype a été validé et est passé en phase d'industrialisation.",
+                equipe: [{initiales: "ABRU", nom: "Alice BRUN", role: "Chef de Projet"}, {initiales: "ASR", nom: "Amélie SER", role: "Designer UX/UI"}],
+                mots_cles: ["Acquisition", "Matériel", "Prototype", "Workflow"]
+            },
+            { 
+                id: "H25011", nom: "Les yeux de Samia", description_courte: "Système permettant de voir si quelqu'un se trouve en face d'un micro donne autour d'une table dans un studio.", statut: "En cours", responsable: "ASR", contribution: "Stratégie", echeance: "30/08/2025", icon: "fas fa-video", image_id: "images/yeux_de_samia.jpg", progression: 60,
+                description_detaillee: "Développement d'un système de vision par ordinateur ('Les yeux de Samia') dans les studios pour analyser les scènes, détecter les mouvements et les positions, afin de générer ou de proposer automatiquement des presets de caméra. Le POC est en phase d'expérimentation en studio de répétition.",
+                equipe: [{initiales: "ASR", nom: "Amélie SER", role: "Chef de Projet"}, {initiales: "HMA", nom: "Hugo MAUX", role: "Expert Vision"}],
+                mots_cles: ["Vision", "Studio", "IA", "Caméra", "Presets"]
+            },
+            { 
+                id: "H25012", nom: "Reporting Portefeuille", description_courte: "Créer, challenger des affichages de reporting pour la gouvernance de nos portefeuilles de projet", statut: "POC", responsable: "ABRU", contribution: "Projet", echeance: "N/A", icon: "fas fa-chart-line", image_id: "images/portfolio_dashboard.jpg", progression: 40,
+                description_detaillee: "Conception d'un tableau de bord (Dashboard) pour la gouvernance, consolidant les données de planification et de portefeuille de projets. Ce POC vise à tester les outils de visualisation et la pertinence des métriques pour les comités de direction.",
+                equipe: [{initiales: "ABRU", nom: "Alice BRUN", role: "PMO"}, {initiales: "CPU", nom: "Claire POU", role: "Data Analyst"}],
+                mots_cles: ["PMO", "Rapport", "Gouvernance", "Dashboard", "Planning"]
+            },
+            { 
+                id: "H25013", nom: "Alternative RPA", description_courte: "Trouver un outil de gestion de projets après la fin de vie de la solution RPA actuelle.", statut: "Idée à Analyser", responsable: "TFG", contribution: "Veille", echeance: "N/A", icon: "fas fa-robot", image_id: "images/alternative_rpa.jpg", progression: 10,
+                description_detaillee: "Suite à l'obsolescence ou la fin de vie du logiciel de Robot Process Automation (RPA), ce projet vise à identifier et évaluer une solution alternative moderne, se concentrant sur les plateformes 'Low-Code' ou 'No-Code' pour l'automatisation des processus. Phase de recueil des besoins en cours.",
+                equipe: [{initiales: "TFG", nom: "Thierry GAUDIER", role: "Porteur du sujet"}, {initiales: "CACE", nom: "Charles ACE", role: "Expert Processus"}],
+                mots_cles: ["RPA", "Automatisation", "Low-Code", "No-Code", "Veille"]
+            },
+            { 
+                id: "H25014", nom: "Plateforme Génération de Contenus", description_courte: "Plateforme collaborative de création de contenus (Politicité).", statut: "Clôturée", responsable: "ABRU", contribution: "Stratégie", echeance: "15/12/2025", icon: "fas fa-users", image_id: "images/plateforme_contenus.jpg", progression: 100,
+                description_detaillee: "Projet clos. Développement et déploiement d'une plateforme collaborative pour la création de contenus par différents contributeurs (Politicité). La plateforme est maintenant en production et gérée par l'équipe Contenus.",
+                equipe: [{initiales: "ABRU", nom: "Alice BRUN", role: "Chef de Projet"}],
+                mots_cles: ["Contenus", "Plateforme", "Collaboration", "Politicité"]
+            },
+            { 
+                id: "H25015", nom: "COMPL AI", description_courte: "Disposer d'un outil pour mesurer la conformité des LLM que nous utilisons par rapport à l'AI Act.", statut: "Non démarré", responsable: "CACE", contribution: "Stratégie", echeance: "N/A", icon: "fas fa-gavel", image_id: "images/compl_ai.jpg", progression: 0,
+                description_detaillee: "Disposer d'un outil pour mesurer la conformité des LLM que nous utilisons par rapport à AI Act. L'objectif est de proposer une suite d'évaluations orientée LLM, d'offrir une première interprétation technique compréhensive de l'IA ACT.",
+                equipe: [{initiales: "CACE", nom: "Charles ACE", role: "Responsable Conformité"}, {initiales: "HMA", nom: "Hugo MAUX", role: "Expert IA"}],
+                mots_cles: ["IA Act", "Conformité", "Réglementation", "LLM", "Stratégie"]
+            },
+            { 
+                id: "H25016", nom: "WAIOH - HIT", description_courte: "Analyse des solutions de voix de synthèse", statut: "POC", responsable: "LEL", contribution: "Veille", echeance: "N/A", icon: "fas fa-volume-up", image_id: "images/analyse_voix_synth.jpg", progression: 40,
+                description_detaillee: "Veille et POC sur les technologies de voix de synthèse (Text-to-Speech) pour évaluer la qualité et l'intégration des voix générées dans les productions (Projet H.I.T). Les tests se concentrent sur le naturel des intonations et la personnalisation des voix.",
+                equipe: [{initiales: "BLE", nom: "Benoit Leloutre", role: "Innovation Officer"}, {initiales: "TFG", nom: "Thierry Gaulier", role: "Référent IA"}],
+                mots_cles: ["Voix", "Synthèse", "Text-to-Speech", "Audio", "IA"]
+            },
+            { 
+                id: "H25017", nom: "Connecteur NDI", description_courte: "Développement d'un connecteur NDI sur l'environnement de production.", statut: "Idée", responsable: "ETRHO", contribution: "Projet", echeance: "N/A", icon: "fas fa-plug", image_id: "images/ndi_connector.jpg", progression: 5,
+                description_detaillee: "Idée de projet visant à créer un connecteur pour l'interface NDI (Network Device Interface) afin d'améliorer la flexibilité et la compatibilité des équipements de production sur le réseau IP. Analyse de faisabilité technique à venir.",
+                equipe: [{initiales: "ETRHO", nom: "Eric RHO", role: "Expert Vidéo/Réseau"}],
+                mots_cles: ["NDI", "Production", "Vidéo", "Réseau", "IP"]
+            },
+            { 
+                id: "H25018", nom: "Chatbot vocal sur sources FCR", description_courte: "Chatbot spécialisé sur les sources FCR, accessible vocalement.", statut: "Idée à Analyser", responsable: "LCTH", contribution: "Projet", echeance: "N/A", icon: "fas fa-microphone-alt", image_id: "images/voice_chatbot_fcr.jpg", progression: 10,
+                description_detaillee: "Développement potentiel d'un chatbot vocal capable d'interroger et de synthétiser des informations provenant des sources FCR (Fournisseurs de Contenus et de Ressources). L'objectif est d'accélérer la recherche d'informations opérationnelles. Analyse des technologies vocales requise.",
+                equipe: [{initiales: "LCTH", nom: "Luc CATH", role: "Chef de Projet"}, {initiales: "HMA", nom: "Hugo MAUX", role: "Expert IA"}],
+                mots_cles: ["Chatbot", "Vocal", "FCR", "IA", "Recherche"]
+            },
+            { 
+                id: "H25999", nom: "Remonter budget sur la veille", description_courte: "Permettre de mettre du budget sur la veille pour des expérimentations rapides.", statut: "Parking", responsable: "LEL", contribution: "Veille", echeance: "N/A", icon: "fas fa-euro-sign", image_id: "images/budget_insight.jpg", progression: 0,
+                description_detaillee: "Proposition stratégique visant à sécuriser une enveloppe budgétaire dédiée aux initiatives de veille technologique. L'objectif est de pouvoir financer des POCs très rapides et peu coûteux sans passer par le cycle complet de budgétisation des projets. En attente de validation de la direction.",
+                equipe: [{initiales: "LEL", nom: "Laura ELM", role: "Porteur du sujet"}, {initiales: "ABRU", nom: "Alice BRUN", role: "PMO"}],
+                mots_cles: ["Budget", "Veille", "POC", "Gouvernance", "Finance"]
+            }
+        ];
+
+        // Fonction pour déterminer la classe CSS du statut
+        function getStatusClass(statut) {
+            if (statut === 'Validé') return 'bg-success';
+            if (statut === 'POC En Cours' || statut === 'En cours' || statut === 'En concept') return 'bg-info';
+            if (statut === 'POC') return 'bg-warning text-dark';
+            if (statut.includes('Idée')) return 'bg-secondary';
+            if (statut === 'Clôturée') return 'bg-dark';
+            if (statut === 'Parking' || statut === 'Non démarré') return 'bg-danger';
+            return 'bg-secondary';
+        }
+
+        function loadProjectDetails() {
+            // 1. Récupérer l'ID du projet depuis l'URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const projectId = urlParams.get('id') || 'H25001';
+
+            // 2. Trouver le projet dans les données
+            const project = projectsData.find(p => p.id === projectId);
+
+            if (!project) {
+                document.getElementById('project-nom').textContent = "Projet Introuvable";
+                document.getElementById('project-description-courte').textContent = "L'ID du projet spécifié n'existe pas.";
+                document.getElementById('project-header-image').innerHTML = '<div class="header-illustration-placeholder"><i class="fas fa-exclamation-circle fa-5x"></i><p class="mt-3 small">Projet introuvable</p></div>';
+                return;
+            }
+
+            // 3. Mettre à jour les éléments de la page
+            document.getElementById('page-title').textContent = `Fiche Projet - ${project.nom}`;
+            document.getElementById('project-nom').textContent = project.nom;
+            document.getElementById('project-description-courte').textContent = project.description_courte;
+            
+            // Mise à jour de la description détaillée
+            document.getElementById('project-description-detaillee').textContent = project.description_detaillee;
+            
+            // Mise à jour des infos clés
+            document.getElementById('project-id').textContent = project.id;
+            document.getElementById('project-echeance').textContent = project.echeance;
+            document.getElementById('project-contribution').textContent = project.contribution;
+            
+            // Mise à jour du badge de statut
+            const statusBadge = document.getElementById('project-status-badge');
+            statusBadge.textContent = project.statut;
+            statusBadge.className = `badge rounded-pill ${getStatusClass(project.statut)} float-end`;
+
+            // Mise à jour de l'image d'en-tête
+            const headerImageContainer = document.getElementById('project-header-image');
+            if (project.image_id) {
+                headerImageContainer.innerHTML = `<img src="${project.image_id}" alt="Illustration du projet ${project.nom}" class="header-illustration">`;
+            } else {
+                headerImageContainer.innerHTML = `<div class="header-illustration-placeholder"><i class="${project.icon} fa-5x"></i><p class="mt-3 small">Vignette indisponible</p></div>`;
+            }
+
+            // 4. GESTION DE LA BARRE DE PROGRESSION
+            const progressBarFill = document.getElementById('progress-bar-fill');
+            const progressBarText = document.getElementById('progress-bar-text');
+            const progression = project.progression;
+
+            progressBarFill.style.width = `${progression}%`;
+            progressBarFill.setAttribute('aria-valuenow', progression);
+            progressBarText.textContent = `${progression}%`;
+
+            // Déterminer la couleur de la barre de progression
+            if (progression === 100) {
+                progressBarFill.className = 'progress-bar bg-success';
+            } else if (progression > 60) {
+                progressBarFill.className = 'progress-bar bg-info';
+            } else if (progression > 0) {
+                progressBarFill.className = 'progress-bar bg-primary';
+            } else {
+                progressBarFill.className = 'progress-bar bg-secondary';
+                progressBarText.textContent = 'Non démarré';
+            }
+
+
+            // 5. GESTION DE L'ÉQUIPE
+            const teamListContainer = document.getElementById('team-members-list');
+            teamListContainer.innerHTML = '';
+            
+            project.equipe.forEach(member => {
+                const isResponsible = member.initiales === project.responsable;
+                
+                const memberHtml = `
+                    <div class="team-member d-flex align-items-center mb-3">
+                        <div class="avatar" data-initials="${member.initiales.charAt(0)}">${member.initiales}</div>
+                        <div>
+                            <strong class="text-dark">${member.nom}</strong>
+                            <div class="role small text-muted">${member.role} ${isResponsible ? ' (Responsable Principal)' : ''}</div>
+                        </div>
+                    </div>
+                `;
+                teamListContainer.innerHTML += memberHtml;
+            });
+
+            // 6. GESTION DES MOTS-CLÉS
+            const keywordsListContainer = document.getElementById('keywords-list');
+            keywordsListContainer.innerHTML = '';
+
+            project.mots_cles.forEach(keyword => {
+                const keywordHtml = `<span class="badge rounded-pill bg-secondary me-2 mb-1">${keyword}</span>`;
+                keywordsListContainer.innerHTML += keywordHtml;
+            });
+        }
+
+        window.onload = loadProjectDetails;
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

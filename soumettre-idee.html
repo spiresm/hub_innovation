@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soumettre une Idée - Tech Innovation Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <style>
+        :root {
+            --bs-primary: #007bff;
+            --bs-secondary: #6c757d;
+            --bs-success: #28a745;
+            --bs-warning: #ffc107;
+            --bs-info: #17a2b8;
+            --bs-light: #f8f9fa;
+            --bs-background-light: #f1f2f7; 
+        }
+        body { 
+            background-color: var(--bs-background-light); 
+            font-family: 'Poppins', sans-serif; 
+        } 
+        /* SUPPRESSION DE .navbar ici et du bloc NAV dans le body */
+
+        .form-card { 
+            border: none; 
+            border-radius: 0.75rem; 
+            box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,.075);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+        }
+        .form-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);
+        }
+
+        .file-upload-zone {
+            border: 2px dashed #ced4da;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .file-upload-zone:hover {
+            border-color: var(--bs-primary);
+            background-color: var(--bs-light);
+        }
+    </style>
+</head>
+<body>
+    <div class="container my-5 pt-5">
+        <h1 class="fw-bolder mb-1">Soumettre une Nouvelle Idée 💡</h1>
+        <p class="text-muted mb-4">Décrivez votre innovation potentielle pour l'analyser avec l'équipe du Hub.</p>
+
+        <form>
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="card form-card p-4">
+                        <h4 class="text-primary mb-3"><i class="fas fa-info-circle me-2"></i> Informations Clés</h4>
+                        <div class="mb-3">
+                            <label for="titreIdee" class="form-label fw-bold">Titre de l'Idée <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="titreIdee" placeholder="Ex: Agent LLM pour l'édition de scripts" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contributeur" class="form-label fw-bold">Votre Sigle (Contributeur) <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="contributeur" placeholder="Ex: LEL, AHH" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contributionEstimee" class="form-label fw-bold">Impact potentiel estimé</label>
+                            <select id="contributionEstimee" class="form-select">
+                                <option value="Faible">Faible (Amélioration locale)</option>
+                                <option value="Moyen">Moyen (Impact sur un service entier)</option>
+                                <option value="Élevé">Élevé (Transformation majeure)</option>
+                            </select>
+                            <div class="form-text">Aidez-nous à prioriser votre idée.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card form-card p-4">
+                        <h4 class="text-primary mb-3"><i class="fas fa-lightbulb me-2"></i> Description Détaillée</h4>
+                        <div class="mb-3">
+                            <label for="probleme" class="form-label fw-bold">Problème/Besoin Adressé <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="probleme" rows="3" placeholder="Décrivez clairement ce que votre idée résout ou améliore." required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="solution" class="form-label fw-bold">Solution Proposée</label>
+                            <textarea class="form-control" id="solution" rows="3" placeholder="Comment votre idée fonctionne-t-elle ? Quelles technologies utiliser ?"></textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-12">
+                    <div class="card form-card p-4">
+                        <h4 class="text-primary mb-3"><i class="fas fa-paperclip me-2"></i> Pièces Jointes (Optionnel)</h4>
+                        <div class="file-upload-zone" onclick="document.getElementById('fileUpload').click()">
+                            <i class="fas fa-cloud-upload-alt fa-3x text-secondary mb-2"></i>
+                            <p class="mb-0 fw-bold">Glissez & déposez vos fichiers ou cliquez ici</p>
+                            <p class="small text-muted mb-0">PDF, images, documents de spécifications (Max 10MB)</p>
+                        </div>
+                        <input type="file" id="fileUpload" name="attachments[]" multiple class="d-none" onchange="updateFileList(this)">
+                    </div>
+
+                    <div id="fileListContainer" class="mt-2 small text-muted">
+                        Aucun fichier sélectionné.
+                    </div>
+                </div>
+
+                <div class="col-12 text-end mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg fw-bold px-5">
+                        <i class="fas fa-check-circle me-2"></i> Soumettre l'Idée
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function updateFileList(input) {
+            const container = document.getElementById('fileListContainer');
+            if (input.files.length > 0) {
+                let html = '<p class="fw-semibold mb-1">Fichiers à uploader :</p><ul>';
+                for (let i = 0; i < input.files.length; i++) {
+                    html += `<li><i class="fas fa-file-alt me-2 text-primary"></i>${input.files[i].name} (${(input.files[i].size / 1024 / 1024).toFixed(2)} Mo)</li>`;
+                }
+                html += '</ul>';
+                container.innerHTML = html;
+            } else {
+                container.innerHTML = 'Aucun fichier sélectionné.';
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
