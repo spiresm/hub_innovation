@@ -145,7 +145,7 @@
         .progress-bar-label:hover { color: var(--bs-primary); text-decoration: underline; }
         .bar-wrapper { margin-bottom: 2.5rem; position: relative; }
 
-        /* NOUVEAUX STYLES POUR LES JAUGES DE PROGRESSION (POUR REMPLACER LE GRAPHIQUE ROND) */
+        /* STYLES POUR LES JAUGES DE PROGRESSION */
         .progress-gauge-wrapper { 
             margin-bottom: 2rem; 
         }
@@ -174,21 +174,6 @@
         /* Style général pour les liens de projet */
         .project-link { text-decoration: none; }
         .project-link:hover { text-decoration: underline; }
-
-        /* Styles pour le Mur de la Reconnaissance */
-        .team-member .avatar {
-            width: 40px;
-            height: 40px;
-            background-color: var(--bs-success); /* Couleur arbitraire pour l'exemple */
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            margin-right: 0.75rem;
-            flex-shrink: 0;
-        }
 
         /* Classes pour le JS de filtrage */
         .filterable-item-alert { /* Garder d-flex */ }
@@ -546,24 +531,30 @@
                     <h4 class="fw-bold text-success mb-3"><i class="fas fa-award me-2"></i> Mur de la Reconnaissance</h4>
                     <p class="text-muted small mb-3">Reconnaissance de l'équipe pour les contributions remarquables récentes.</p>
                     
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="avatar bg-primary text-white" data-initials="LP">LP</div>
+                    <div class="d-flex align-items-center mb-4 team-member">
+                        <div class="me-3 p-2 bg-primary-subtle rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                            <i class="fas fa-hand-sparkles text-primary fa-lg"></i>
+                        </div>
                         <div>
                             <strong class="text-dark">Lucie P.</strong>
                             <p class="mb-0 small text-muted">A mené MIA au déploiement validé.</p>
                         </div>
                     </div>
                     
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="avatar bg-info text-white" data-initials="AHH">AHH</div>
+                    <div class="d-flex align-items-center mb-4 team-member">
+                        <div class="me-3 p-2 bg-info-subtle rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                            <i class="fas fa-medal text-info fa-lg"></i>
+                        </div>
                         <div>
                             <strong class="text-dark">Ahmed H.</strong>
                             <p class="mb-0 small text-muted">Excellente gestion des dépendances Flux 4G.</p>
                         </div>
                     </div>
                     
-                    <div class="d-flex align-items-center">
-                        <div class="avatar bg-success text-white" data-initials="ABR">ABR</div>
+                    <div class="d-flex align-items-center team-member">
+                        <div class="me-3 p-2 bg-success-subtle rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                            <i class="fas fa-thumbs-up text-success fa-lg"></i>
+                        </div>
                         <div>
                             <strong class="text-dark">Amélie B.</strong>
                             <p class="mb-0 small text-muted">Concept UX Mobile innovant pour H25005.</p>
