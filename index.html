@@ -137,56 +137,6 @@
             opacity: 0.8;
         }
 
-
-        /* --- NOUVEAUX STYLES DONUT CHART (RÉINTÉGRATION CORRIGÉE) --- */
-        .donut-chart-container {
-            /* Correction cruciale : Force l'élément à être un carré pour que le conic-gradient fonctionne */
-            aspect-ratio: 1 / 1; 
-            width: 200px; /* Taille fixe pour l'affichage */
-            
-            border-radius: 50%;
-            background: 
-                conic-gradient(
-                    /* Technique (6/19 = 31.5%) */
-                    var(--bs-primary) 0deg, 
-                    var(--bs-primary) calc((6/19) * 360deg),
-                    
-                    /* Projet (5/19 = 26.3%) */
-                    var(--bs-success) calc((6/19) * 360deg), 
-                    var(--bs-success) calc(((6+5)/19) * 360deg),
-                    
-                    /* Diffusion (4/19 = 21.1%) */
-                    var(--bs-warning) calc(((6+5)/19) * 360deg), 
-                    var(--bs-warning) calc(((6+5+4)/19) * 360deg),
-                    
-                    /* Stratégie (4/19 = 21.1%) */
-                    var(--bs-info) calc(((6+5+4)/19) * 360deg),
-                    var(--bs-info) 360deg
-                );
-            position: relative;
-            box-shadow: 0 0 0 5px rgba(0,0,0,0.05);
-        }
-        .donut-chart-container::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 70%; /* Le trou du donut */
-            height: 70%; /* Le trou du donut */
-            background: white;
-            border-radius: 50%;
-        }
-        .legend-dot {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-        /* --- FIN NOUVEAUX STYLES DONUT CHART --- */
-
-
         /* Styles pour la section Charge de Travail (Barres) */
         .progress-bar { transition: width 0.8s ease-out; }
         .progress-bar-capacity { height: 25px; background-color: #e9ecef; border-radius: 0.375rem; margin-top: 5px; overflow: hidden; }
@@ -195,6 +145,28 @@
         .progress-bar-label:hover { color: var(--bs-primary); text-decoration: underline; }
         .bar-wrapper { margin-bottom: 2.5rem; position: relative; }
 
+        /* NOUVEAUX STYLES POUR LES JAUGES DE PROGRESSION (POUR REMPLACER LE GRAPHIQUE ROND) */
+        .progress-gauge-wrapper { 
+            margin-bottom: 2rem; 
+        }
+        .progress-gauge-wrapper .progress { 
+            height: 30px; 
+            border-radius: 0.5rem;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+        }
+        .progress-gauge-wrapper .progress-bar {
+            line-height: 30px; 
+            font-weight: bold;
+            text-align: right;
+            padding-right: 15px;
+        }
+        .progress-label {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
         /* Styles pour les alertes */
         .alert-card { border-left: 5px solid var(--bs-danger); }
         .alert-dot-critical { color: white; background-color: #dc3545; padding: 4px 8px; border-radius: 0.25rem; font-size: 0.75rem; font-weight: bold; }
@@ -202,6 +174,21 @@
         /* Style général pour les liens de projet */
         .project-link { text-decoration: none; }
         .project-link:hover { text-decoration: underline; }
+
+        /* Styles pour le Mur de la Reconnaissance */
+        .team-member .avatar {
+            width: 40px;
+            height: 40px;
+            background-color: var(--bs-success); /* Couleur arbitraire pour l'exemple */
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+        }
 
         /* Classes pour le JS de filtrage */
         .filterable-item-alert { /* Garder d-flex */ }
@@ -518,61 +505,79 @@
         </div>
 
         <div class="row g-4">
-            <div class="col-lg-4">
-                <div class="card kpi-card h-100 p-4">
-                    <h5 class="fw-bold text-success mb-3"><i class="fas fa-trophy me-2"></i> Mur de la Reconnaissance</h5>
-                    <p class="small text-muted mb-3 border-bottom pb-2">Les succès récents du trimestre (Q2 2025) :</p>
+            
+            <div class="col-lg-8">
+                <div class="chart-container kpi-card p-4 h-100">
+                    <h4 class="fw-bold text-success mb-3"><i class="fas fa-chart-bar me-2"></i> Répartition des Projets par Domaine</h4>
+                    <p class="small text-muted mb-4">Visualisation claire de la répartition des 19 projets actifs par domaine stratégique (remplacement du graphique en anneau).</p>
                     
-                    <div class="d-flex align-items-center success-item mb-3">
-                        <div class="text-success me-3"><i class="fas fa-medal fa-2x"></i></div>
-                        <div>
-                            <p class="fw-bold mb-0 small text-dark">Lancement réussi : **MIA (H25008)**</p>
-                            <span class="badge bg-success">ÉQUIPE : VAH, LEL</span>
-                        </div>
-                    </div>
-                    
-                    <div class="d-flex align-items-center success-item mb-3">
-                        <div class="text-primary me-3"><i class="fas fa-star fa-2x"></i></div>
-                        <div>
-                            <p class="fw-bold mb-0 small text-dark">Idée la plus prometteuse : **Vision X**</p>
-                            <span class="badge bg-primary">CONTRIBUTEUR : AHH</span>
+                    <div class="progress-gauge-wrapper">
+                        <span class="progress-label text-primary"><i class="fas fa-cogs me-2"></i> Technique (6/19 projets)</span>
+                        <div class="progress">
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: 31.5%" aria-valuenow="31.5" aria-valuemin="0" aria-valuemax="100">31,5%</div>
                         </div>
                     </div>
 
-                    <div class="d-flex align-items-center success-item">
-                        <div class="text-info me-3"><i class="fas fa-award fa-2x"></i></div>
+                    <div class="progress-gauge-wrapper">
+                        <span class="progress-label text-success"><i class="fas fa-tasks me-2"></i> Projet (5/19 projets)</span>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 26.3%" aria-valuenow="26.3" aria-valuemin="0" aria-valuemax="100">26,3%</div>
+                        </div>
+                    </div>
+
+                    <div class="progress-gauge-wrapper">
+                        <span class="progress-label text-warning"><i class="fas fa-bullhorn me-2"></i> Diffusion & Marketing (4/19 projets)</span>
+                        <div class="progress">
+                            <div class="progress-bar bg-warning text-dark" role="progressbar" style="width: 21.1%" aria-valuenow="21.1" aria-valuemin="0" aria-valuemax="100">21,1%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-gauge-wrapper mb-0">
+                        <span class="progress-label text-info"><i class="fas fa-eye me-2"></i> Stratégie & Veille (4/19 projets)</span>
+                        <div class="progress">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: 21.1%" aria-valuenow="21.1" aria-valuemin="0" aria-valuemax="100">21,1%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="card kpi-card p-4 h-100">
+                    <h4 class="fw-bold text-success mb-3"><i class="fas fa-award me-2"></i> Mur de la Reconnaissance</h4>
+                    <p class="text-muted small mb-3">Reconnaissance de l'équipe pour les contributions remarquables récentes.</p>
+                    
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="avatar bg-primary text-white" data-initials="LP">LP</div>
                         <div>
-                            <p class="fw-bold mb-0 small text-dark">Meilleure Documentation de POC</p>
-                            <span class="badge bg-info">ÉQUIPE : ABRU</span>
+                            <strong class="text-dark">Lucie P.</strong>
+                            <p class="mb-0 small text-muted">A mené MIA au déploiement validé.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="avatar bg-info text-white" data-initials="AHH">AHH</div>
+                        <div>
+                            <strong class="text-dark">Ahmed H.</strong>
+                            <p class="mb-0 small text-muted">Excellente gestion des dépendances Flux 4G.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center">
+                        <div class="avatar bg-success text-white" data-initials="ABR">ABR</div>
+                        <div>
+                            <strong class="text-dark">Amélie B.</strong>
+                            <p class="mb-0 small text-muted">Concept UX Mobile innovant pour H25005.</p>
                         </div>
                     </div>
                     
                     <div class="mt-4 text-center">
-                        <a href="#" class="btn btn-outline-secondary btn-sm"><i class="fas fa-eye me-2"></i> Voir tous les succès passés</a>
-                    </div>
-                </div>
-            </div>
-             <div class="col-lg-8">
-                <div class="chart-container kpi-card h-100 p-4">
-                    <h4 class="fw-bold text-primary mb-3"><i class="fas fa-chart-pie me-2"></i> Répartition des Projets par Domaine</h4>
-                    <p class="small text-muted mb-4">Ventilation des 19 projets totaux selon leur domaine de contribution (basé sur le `registre.html`).</p>
-                    
-                    <div class="d-flex align-items-center justify-content-around h-100" style="min-height: 250px;"> 
-                        <div class="donut-chart-container"> 
-                        </div>
-                        <div class="legend-container ps-4">
-                            <div class="mb-2"><span class="legend-dot" style="background-color: var(--bs-primary);"></span> Technique (6/19) <span class="fw-bold">(31,5%)</span></div>
-                            <div class="mb-2"><span class="legend-dot" style="background-color: var(--bs-success);"></span> Projet (5/19) <span class="fw-bold">(26,3%)</span></div>
-                            <div class="mb-2"><span class="legend-dot" style="background-color: var(--bs-warning);"></span> Diffusion & Marketing (4/19) <span class="fw-bold">(21,1%)</span></div>
-                            <div class="mb-2"><span class="legend-dot" style="background-color: var(--bs-info);"></span> Stratégie & Veille (4/19) <span class="fw-bold">(21,1%)</span></div>
-                            <div class="mt-4 pt-2 border-top">
-                                <span class="fw-bold">Total : 19 projets</span>
-                            </div>
-                        </div>
+                        <a href="#" class="btn btn-outline-success btn-sm">Voir tous les Succès</a>
                     </div>
                 </div>
             </div>
         </div>
+
+
     </div>
 
     <script>
