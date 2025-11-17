@@ -68,7 +68,8 @@
             width: 100%;
             max-width: 140px;
             height: 70px; 
-            background: conic-gradient(var(--bs-success) 0deg 216deg, #eee 216deg 360deg); 
+            /* JAUGE MISE À JOUR : 80% de 180 degrés est 144 degrés. Début à 180 (bas gauche) jusqu'à 324 (80% d'arc) */
+            background: conic-gradient(var(--bs-success) 180deg 324deg, #eee 324deg 360deg); 
             border-radius: 140px 140px 0 0; 
             margin: 0.5rem auto 0;
             position: relative;
@@ -239,7 +240,7 @@
             
             <div class="col-12 col-md-3">
                 <div class="card kpi-card p-4 text-center bg-white h-100 d-flex flex-column justify-content-between">
-                    <p class="text-muted small fw-bold mb-1">Santé Globale du Portefeuille</p>
+                    <p class="text-muted small fw-bold mb-1">Taux de Santé (Projets Vert/Jaune)</p> 
                     <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center py-2">
                         <div class="gauge-placeholder">
                             <div class="gauge-inner-circle"></div>
@@ -248,7 +249,7 @@
                             <span id="gauge-value">80%</span>
                         </h3>
                     </div>
-                    <p class="text-muted small mb-0">Objectif atteint</p>
+                    <p class="text-muted small mb-0">80% des projets sans alerte critique</p>
                 </div>
             </div>
             <div class="col-12 col-md-3">
