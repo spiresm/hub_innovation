@@ -34,16 +34,11 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             background-color: white; /* Assure que toutes les cartes sont blanches */
         }
-        /* Style pour les liens englobant une carte (KPI) - Ces cartes restent liées au registre */
-        .card-link {
-            text-decoration: none;
-            color: inherit;
-        }
-        .card-link:hover .kpi-card {
+        /* Effet pour les cartes KPI */
+        .kpi-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);
         }
-        
         .kpi-card .icon { font-size: 2.5rem; }
         
         .hero-card { 
@@ -91,33 +86,6 @@
             z-index: 5;
         }
         
-        /* --- STYLES TUNNEL D'INNOVATION --- */
-        .funnel-link {
-            text-decoration: none;
-            color: inherit;
-            display: block; /* S'assurer que le lien prend toute la place */
-        }
-        .funnel-step {
-            color: white;
-            text-align: center;
-            padding: 10px 15px;
-            margin: 10px auto;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding-left: 20px; 
-            padding-right: 20px;
-        }
-        .funnel-link:hover .funnel-step { /* Applique l'effet au div interne quand le lien est survolé */
-            opacity: 0.9;
-            transform: scale(1.01);
-        }
-        .funnel-step.bg-warning {
-             color: #343a40 !important;
-        }
-        
         /* --- NOUVEAUX STYLES MATRICE DE PRIORISATION --- */
         .matrix-container {
             position: relative;
@@ -152,7 +120,6 @@
             font-weight: bold;
             color: #495057;
         }
-        /* Style pour les points de la matrice, désormais des liens */
         .matrix-project-dot {
             position: absolute;
             width: 12px;
@@ -161,8 +128,6 @@
             cursor: pointer;
             box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.7);
             z-index: 10;
-            display: block; 
-            text-decoration: none; 
         }
         .matrix-quadrant-title {
             position: absolute;
@@ -171,7 +136,52 @@
             padding: 0.25rem;
             opacity: 0.8;
         }
-        /* --- FIN NOUVEAUX STYLES --- */
+        /* --- FIN NOUVEAUX STYLES MATRICE --- */
+
+
+        /* --- NOUVEAUX STYLES DONUT CHART --- */
+        .donut-chart-container {
+            border-radius: 50%;
+            background: 
+                conic-gradient(
+                    /* Technique (6/19 = 31.5%) */
+                    var(--bs-primary) 0deg, 
+                    var(--bs-primary) calc((6/19) * 360deg),
+                    
+                    /* Projet (5/19 = 26.3%) */
+                    var(--bs-success) calc((6/19) * 360deg), 
+                    var(--bs-success) calc(((6+5)/19) * 360deg),
+                    
+                    /* Diffusion (4/19 = 21.1%) */
+                    var(--bs-warning) calc(((6+5)/19) * 360deg), 
+                    var(--bs-warning) calc(((6+5+4)/19) * 360deg),
+                    
+                    /* Stratégie (4/19 = 21.1%) */
+                    var(--bs-info) calc(((6+5+4)/19) * 360deg),
+                    var(--bs-info) 360deg
+                );
+            position: relative;
+            box-shadow: 0 0 0 5px rgba(0,0,0,0.05); /* Petite ombre externe */
+        }
+        .donut-chart-container::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%; /* Le trou du donut */
+            height: 70%; /* Le trou du donut */
+            background: white;
+            border-radius: 50%;
+        }
+        .legend-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        /* --- FIN NOUVEAUX STYLES DONUT CHART --- */
 
 
         /* Styles pour la section Charge de Travail (Barres) */
@@ -197,133 +207,6 @@
     </style>
 </head>
 <body class="bg-body-tertiary">
-
-    <div class="modal fade" id="newProjectModal" tabindex="-1" aria-labelledby="newProjectModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="newProjectModalLabel"><i class="fas fa-plus-circle me-2"></i> Ajouter un Nouveau Projet</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form name="nouveau_projet" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/success" enctype="multipart/form-data">
-                    <input type="hidden" name="form-name" value="nouveau_projet" />
-                    <p class="d-none">
-                        <label>Don’t fill this out if you’re human: <input name="bot-field" /></label>
-                    </p>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="projectNom" class="form-label fw-bold">Nom du Projet *</label>
-                                    <input type="text" class="form-control" id="projectNom" name="nom" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="projectResponsable" class="form-label fw-bold">Responsable (Initiales) *</label>
-                                    <input type="text" class="form-control" id="projectResponsable" name="responsable" placeholder="Ex: LEL, HMA" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="projectContribution" class="form-label fw-bold">Domaine de Contribution *</label>
-                                    <select id="projectContribution" class="form-select" name="contribution" required>
-                                        <option value="">Sélectionner...</option>
-                                        <option value="Stratégie">Stratégie</option>
-                                        <option value="Projet">Projet</option>
-                                        <option value="Veille">Veille</option>
-                                        <option value="Marketing">Marketing</option>
-                                        <option value="Diffusion">Diffusion</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="projectStatut" class="form-label fw-bold">Statut Initial *</label>
-                                    <select id="projectStatut" class="form-select" name="statut" required>
-                                        <option value="Idée à Analyser" selected>Idée / à Analyser</option>
-                                        <option value="POC">POC</option>
-                                        <option value="En cours">En cours</option>
-                                        <option value="Validé">Validé</option>
-                                        <option value="Non démarré">Non démarré / Parking</option>
-                                        <option value="Clôturée">Clôturée</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="projectDescriptionCourte" class="form-label fw-bold">Description Courte *</label>
-                                    <input type="text" class="form-control" id="projectDescriptionCourte" name="description_courte" placeholder="Max 100 caractères" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="projectDescriptionDetaillee" class="form-label fw-bold">Description Détaillée</label>
-                                    <textarea class="form-control" id="projectDescriptionDetaillee" name="description_detaillee" rows="3"></textarea>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="projectVignette" class="form-label fw-bold">Vignette d'Illustration (Image)</label>
-                                    <input type="file" class="form-control" id="projectVignette" name="vignette" accept="image/*">
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label for="projectMotsCles" class="form-label fw-bold">Mots-clés (séparés par des virgules)</label>
-                                    <input type="text" class="form-control" id="projectMotsCles" name="mots_cles" placeholder="Ex: IA, Cloud, Veille">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="projectEcheance" class="form-label fw-bold">Échéance (Date)</label>
-                                    <input type="date" class="form-control" id="projectEcheance" name="echeance">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane me-2"></i> Soumettre le Projet</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    
-    <div class="modal fade" id="projectDetailModal" tabindex="-1" aria-labelledby="projectDetailModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="projectDetailModalLabel"><i class="fas fa-info-circle me-2"></i> Détails du Projet</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <h4 id="modalProjectName" class="text-primary"></h4>
-                    <p class="fw-bold text-muted small mb-3" id="modalProjectID"></p>
-                    
-                    <div class="mb-3">
-                        <strong>Statut :</strong> 
-                        <span id="modalProjectStatut" class="badge"></span>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <strong>Description :</strong> 
-                        <p id="modalProjectDescription" class="mb-0"></p>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <strong>Impact Clé :</strong> 
-                        <p id="modalProjectImpact" class="mb-0"></p>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-6">
-                            <strong>Responsable(s) :</strong> 
-                            <p id="modalProjectResp" class="mb-0 small"></p>
-                        </div>
-                        <div class="col-6">
-                            <strong>Échéance :</strong> 
-                            <p id="modalProjectEcheance" class="mb-0 small"></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <a id="modalFullFicheLink" href="#" class="btn btn-outline-primary btn-sm">Voir la Fiche Complète</a>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                </div>
-            </div>
-        </div>
-    </div>
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid px-5">
             <a class="navbar-brand text-primary fw-bold fs-4" href="index.html">
@@ -337,22 +220,16 @@
                     <li class="nav-item"><a class="nav-link active fw-bold text-primary" href="index.html"><i class="fas fa-home me-1"></i> Accueil</a></li>
                     <li class="nav-item"><a class="nav-link" href="registre.html"><i class="fas fa-book-open me-1"></i> Explorer les Projets</a></li>
                     <li class="nav-item"><a class="nav-link" href="equipe.html"><i class="fas fa-users me-1"></i> Équipe</a></li> 
-                    <li class="nav-item ms-3"><a class="btn btn-primary" href="#" data-bs-toggle="modal" data-bs-target="#newProjectModal"><i class="fas fa-plus me-2"></i> Ajouter un Projet</a></li>
+                    <li class="nav-item ms-3"><a class="btn btn-primary" href="soumettre-idee.html"><i class="fas fa-lightbulb me-2"></i> Soumettre une Idée</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <div class="container my-5">
-        <div class="row align-items-center mb-1">
-            <div class="col-md-9">
-                <h1 class="fw-bolder mb-0">Tableau de Bord de l'Innovation</h1>
-            </div>
-            <div class="col-md-3 text-end">
-                <a class="btn btn-primary" href="soumettre-idee.html"><i class="fas fa-lightbulb me-2"></i> Soumettre une Idée</a>
-            </div>
-        </div>
+        <h1 class="fw-bolder mb-1">Tableau de Bord de l'Innovation HIT</h1>
         <p class="text-muted mb-4">Aperçu stratégique du portefeuille d'innovation Technos.</p>
+        
         <div class="row mb-5">
             <div class="col-lg-12">
                 <div class="input-group input-group-lg kpi-card">
@@ -367,54 +244,46 @@
 
         <div class="row row-cols-1 row-cols-md-4 g-4 mb-5">
             <div class="col">
-                <a href="registre.html" class="card-link" title="Voir tous les projets dans le registre">
-                    <div class="card kpi-card p-4 text-center h-100 d-flex flex-column justify-content-center">
-                        <i class="fas fa-project-diagram text-primary icon my-2"></i>
-                        <div class="card-body p-0">
-                            <h3 class="card-title fw-bold mb-0">19</h3>
-                            <p class="text-muted small">Projets Totaux</p>
-                        </div>
+                <div class="card kpi-card p-4 text-center h-100 d-flex flex-column justify-content-center">
+                    <i class="fas fa-project-diagram text-primary icon my-2"></i>
+                    <div class="card-body p-0">
+                        <h3 class="card-title fw-bold mb-0">19</h3>
+                        <p class="text-muted small">Projets Totaux</p>
                     </div>
-                </a>
+                </div>
             </div>
             <div class="col">
-                <a href="registre.html?statut=valide_poc" class="card-link" title="Voir les projets validés ou en POC">
-                    <div class="card kpi-card p-4 text-center h-100 d-flex flex-column justify-content-center">
-                        <i class="fas fa-check-circle text-success icon my-2"></i>
-                        <div class="card-body p-0">
-                            <h3 class="card-title fw-bold mb-0">32%</h3>
-                            <p class="text-muted small">Taux d'Avancement (Validé/POC)</p>
-                        </div>
+                <div class="card kpi-card p-4 text-center h-100 d-flex flex-column justify-content-center">
+                    <i class="fas fa-check-circle text-success icon my-2"></i>
+                    <div class="card-body p-0">
+                        <h3 class="card-title fw-bold mb-0">32%</h3>
+                        <p class="text-muted small">Taux d'Avancement (Validé/POC)</p>
                     </div>
-                </a>
+                </div>
             </div>
             
             <div class="col">
-                <a href="registre.html?statut=sante" class="card-link" title="Analyse détaillée de la santé du portefeuille">
-                    <div class="card kpi-card p-4 text-center bg-white h-100 d-flex flex-column justify-content-between">
-                        <p class="text-muted small fw-bold mb-1">Santé Globale du Portefeuille</p>
-                        <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center py-2">
-                            <div class="gauge-placeholder">
-                                <div class="gauge-inner-circle"></div>
-                            </div>
-                            <h3 class="card-title fw-bold mt-2 text-success">
-                                <span id="gauge-value">80%</span>
-                            </h3>
+                <div class="card kpi-card p-4 text-center bg-white h-100 d-flex flex-column justify-content-between">
+                    <p class="text-muted small fw-bold mb-1">Santé Globale du Portefeuille</p>
+                    <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center py-2">
+                        <div class="gauge-placeholder">
+                            <div class="gauge-inner-circle"></div>
                         </div>
-                        <p class="text-muted small mb-0">Objectif atteint</p>
+                        <h3 class="card-title fw-bold mt-2 text-success">
+                            <span id="gauge-value">80%</span>
+                        </h3>
                     </div>
-                </a>
+                    <p class="text-muted small mb-0">Objectif atteint</p>
+                </div>
             </div>
             <div class="col">
-                <a href="registre.html?statut=idee" class="card-link" title="Voir les idées à analyser (backlog)">
-                    <div class="card kpi-card p-4 text-center h-100 d-flex flex-column justify-content-center">
-                        <i class="fas fa-lightbulb text-info icon my-2"></i>
-                        <div class="card-body p-0">
-                            <h3 class="card-title fw-bold mb-0">6</h3>
-                            <p class="text-muted small">Idées à Analyser (Backlog)</p>
-                        </div>
+                <div class="card kpi-card p-4 text-center h-100 d-flex flex-column justify-content-center">
+                    <i class="fas fa-lightbulb text-info icon my-2"></i>
+                    <div class="card-body p-0">
+                        <h3 class="card-title fw-bold mb-0">6</h3>
+                        <p class="text-muted small">Idées à Analyser (Backlog)</p>
                     </div>
-                </a>
+                </div>
             </div>
         </div>
         
@@ -426,12 +295,12 @@
                         <div>
                             <span class="badge bg-light text-primary mb-2 fw-bold">🏆 Succès Récent</span>
                             <h3 class="fw-bold mb-1">
-                                <a href="#" class="text-white project-link" data-bs-toggle="modal" data-bs-target="#projectDetailModal" data-project-id="H25008">MIA (LLM Co-pilot) : Déploiement Validé</a>
+                                <a href="fiche-projet.html?id=H25008" class="text-white project-link">MIA (LLM Co-pilot) : Déploiement Validé</a>
                             </h3>
                             <p class="lead mb-3">
                                 L'agent conversationnel utilisant le LLM est maintenant intégré à MediaSphere. Il offre des réponses contextualisées et augmente l'efficacité des équipes de 15%.
                             </p>
-                            <a href="#" class="btn btn-outline-light btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#projectDetailModal" data-project-id="H25008">Voir l'Impact <i class="fas fa-arrow-right ms-1"></i></a>
+                            <a href="fiche-projet.html?id=H25008" class="btn btn-outline-light btn-sm fw-bold">Voir l'Impact <i class="fas fa-arrow-right ms-1"></i></a>
                         </div>
                     </div>
                 </div>
@@ -447,7 +316,7 @@
                         <div>
                             <div class="fw-bold small mb-0 text-success">01/07/2025</div>
                             <p class="mb-0 small">
-                                <a href="#" class="text-dark project-link" data-bs-toggle="modal" data-bs-target="#projectDetailModal" data-project-id="H25005">Début Diffusion Légère Mobile (H25005)</a>
+                                <a href="fiche-projet.html?id=H25005" class="text-dark project-link">Début Diffusion Légère Mobile (H25005)</a>
                             </p>
                         </div>
                     </div>
@@ -459,7 +328,7 @@
                         <div>
                             <div class="fw-bold small mb-0 text-success">30/08/2025</div>
                             <p class="mb-0 small">
-                                <a href="#" class="text-dark project-link" data-bs-toggle="modal" data-bs-target="#projectDetailModal" data-project-id="H25011">POC final Les yeux de Samia (H25011)</a>
+                                <a href="fiche-projet.html?id=H25011" class="text-dark project-link">POC final Les yeux de Samia (H25011)</a>
                             </p>
                         </div>
                     </div>
@@ -471,7 +340,7 @@
                         <div>
                             <div class="fw-bold small mb-0 text-success">30/10/2025</div>
                             <p class="mb-0 small">
-                                <a href="#" class="text-dark project-link" data-bs-toggle="modal" data-bs-target="#projectDetailModal" data-project-id="H25007">Fin Conformité R128 Musiq3 (H25007)</a>
+                                <a href="fiche-projet.html?id=H25007" class="text-dark project-link">Fin Conformité R128 Musiq3 (H25007)</a>
                             </p>
                         </div>
                     </div>
@@ -483,7 +352,7 @@
                         <div>
                             <div class="fw-bold small mb-0 text-muted">15/12/2025</div>
                             <p class="mb-0 small">
-                                <a href="#" class="text-dark project-link" data-bs-toggle="modal" data-bs-target="#projectDetailModal" data-project-id="H25014">Clôture Plateforme Contenus (H25014)</a>
+                                <a href="fiche-projet.html?id=H25014" class="text-dark project-link">Clôture Plateforme Contenus (H25014)</a>
                             </p>
                         </div>
                     </div>
@@ -503,7 +372,7 @@
                         </div>
                         <div>
                             <div class="fw-bold small mb-0">
-                                <a href="#" class="text-dark project-link" data-bs-toggle="modal" data-bs-target="#projectDetailModal" data-project-id="H25006">H25006 - Flux 4G (POC)</a>
+                                <a href="fiche-projet.html?id=H25006" class="text-dark project-link">H25006 - Flux 4G (POC)</a>
                             </div>
                             <p class="mb-0 text-muted small">Retard de 2 semaines, cause : Dépendances réseau non livrées.</p>
                             <span class="alert-dot-critical">CRITIQUE</span>
@@ -516,7 +385,7 @@
                         </div>
                         <div>
                             <div class="fw-bold small mb-0">
-                                <a href="#" class="text-dark project-link" data-bs-toggle="modal" data-bs-target="#projectDetailModal" data-project-id="H25001">H25001 - Jean-Paul IA (Exploration)</a>
+                                <a href="fiche-projet.html?id=H25001" class="text-dark project-link">H25001 - Jean-Paul IA (Exploration)</a>
                             </div>
                             <p class="mb-0 text-muted small">Responsable (LEL) à 100% de charge pour le mois d'août.</p>
                             <span class="badge bg-warning text-dark">RESSOURCE TENDUE</span>
@@ -529,7 +398,7 @@
                         </div>
                         <div>
                             <div class="fw-bold small mb-0">
-                                <a href="#" class="text-dark project-link" data-bs-toggle="modal" data-bs-target="#projectDetailModal" data-project-id="H25005">H25005 - Diffusion Mobile (POC)</a>
+                                <a href="fiche-projet.html?id=H25005" class="text-dark project-link">H25005 - Diffusion Mobile (POC)</a>
                             </div>
                             <p class="mb-0 text-muted small">Échéance (01/07) imminente. Vérification du Go/No Go nécessaire.</p>
                             <span class="badge bg-info">ACTION IMMÉDIATE</span>
@@ -540,52 +409,50 @@
             </div>
 
             <div class="col-lg-6">
-                <a href="equipe.html" class="card-link" title="Voir l'allocation des ressources de l'équipe">
-                    <div class="chart-container h-100">
-                        <h4 class="fw-bold text-primary mb-2"><i class="fas fa-handshake me-2"></i> Charge de Travail par Responsable</h4>
-                        <p class="small text-muted mb-4">Allocation de Jours/Homme sur la période H2 2025.</p>
-                        
-                        <div class="bar-wrapper mt-4">
-                            <a href="equipe.html#LEL" class="progress-bar-label">LEL</a>
-                            <div class="progress-bar-capacity">
-                                <div class="progress-bar bg-primary" role="progressbar" style="width: 81.8%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="110">
-                                    <span class="float-end pe-2 text-white">90 J/H (82%)</span>
-                                </div>
+                <div class="chart-container">
+                    <h4 class="fw-bold text-primary mb-2"><i class="fas fa-handshake me-2"></i> Charge de Travail par Responsable</h4>
+                    <p class="small text-muted mb-4">Allocation de Jours/Homme sur la période H2 2025.</p>
+                    
+                    <div class="bar-wrapper mt-4">
+                        <a href="equipe.html#LEL" class="progress-bar-label">LEL</a>
+                        <div class="progress-bar-capacity">
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: 81.8%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="110">
+                                <span class="float-end pe-2 text-white">90 J/H (82%)</span>
                             </div>
-                            <p class="small text-muted text-end mt-1">Capacité Max : 110 J/H</p>
                         </div>
-                        
-                        <div class="bar-wrapper">
-                            <a href="equipe.html#ABRU" class="progress-bar-label">ABRU</a>
-                            <div class="progress-bar-capacity">
-                                <div class="progress-bar bg-success" role="progressbar" style="width: 40.9%" aria-valuenow="45" aria-valuemin="0" aria-valuemax="110">
-                                    <span class="float-end pe-2 text-white">45 J/H (41%)</span>
-                                </div>
-                            </div>
-                            <p class="small text-muted text-end mt-1">Capacité Max : 110 J/H</p>
-                        </div>
-                        
-                        <div class="bar-wrapper">
-                            <a href="equipe.html#AHH" class="progress-bar-label">AHH</a>
-                            <div class="progress-bar-capacity">
-                                <div class="progress-bar bg-warning" role="progressbar" style="width: 18.2%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="110">
-                                    <span class="float-end pe-2 text-dark">20 J/H (18%)</span>
-                                </div>
-                            </div>
-                            <p class="small text-muted text-end mt-1">Capacité Max : 110 J/H</p>
-                        </div>
-                        
-                        <div class="bar-wrapper">
-                            <a href="equipe.html#VAH" class="progress-bar-label">VAH</a>
-                            <div class="progress-bar-capacity">
-                                <div class="progress-bar bg-info" role="progressbar" style="width: 13.6%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="110">
-                                    <span class="float-end pe-2 text-dark">15 J/H (14%)</span>
-                                </div>
-                            </div>
-                            <p class="small text-muted text-end mt-1">Capacité Max : 110 J/H</p>
-                        </div>
+                        <p class="small text-muted text-end mt-1">Capacité Max : 110 J/H</p>
                     </div>
-                </a>
+                    
+                    <div class="bar-wrapper">
+                        <a href="equipe.html#ABRU" class="progress-bar-label">ABRU</a>
+                        <div class="progress-bar-capacity">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 40.9%" aria-valuenow="45" aria-valuemin="0" aria-valuemax="110">
+                                <span class="float-end pe-2 text-white">45 J/H (41%)</span>
+                            </div>
+                        </div>
+                        <p class="small text-muted text-end mt-1">Capacité Max : 110 J/H</p>
+                    </div>
+                    
+                    <div class="bar-wrapper">
+                        <a href="equipe.html#AHH" class="progress-bar-label">AHH</a>
+                        <div class="progress-bar-capacity">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 18.2%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="110">
+                                <span class="float-end pe-2 text-dark">20 J/H (18%)</span>
+                            </div>
+                        </div>
+                        <p class="small text-muted text-end mt-1">Capacité Max : 110 J/H</p>
+                    </div>
+                    
+                    <div class="bar-wrapper">
+                        <a href="equipe.html#VAH" class="progress-bar-label">VAH</a>
+                        <div class="progress-bar-capacity">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: 13.6%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="110">
+                                <span class="float-end pe-2 text-dark">15 J/H (14%)</span>
+                            </div>
+                        </div>
+                        <p class="small text-muted text-end mt-1">Capacité Max : 110 J/H</p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -594,21 +461,21 @@
                  <h4 class="fw-bold text-primary mb-3"><i class="fas fa-history me-2"></i> Échéancier Visuel des POC</h4>
                 <div class="card kpi-card p-4 h-100">
                     <div class="timeline-item mb-3 filterable-item-timeline">
-                        <a href="#" class="small fw-bold text-primary project-link d-block" data-bs-toggle="modal" data-bs-target="#projectDetailModal" data-project-id="H25005">H25005 Diffusion Légère Mobile (POC)</a>
+                        <a href="fiche-projet.html?id=H25005" class="small fw-bold text-primary project-link d-block">H25005 Diffusion Légère Mobile (POC)</a>
                         <div class="progress" style="height: 10px;">
                             <div class="progress-bar bg-warning" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                         <p class="text-muted small mt-1">Échéance : 01/07/2025</p>
                     </div>
                     <div class="timeline-item mb-3 filterable-item-timeline">
-                        <a href="#" class="small fw-bold text-success project-link d-block" data-bs-toggle="modal" data-bs-target="#projectDetailModal" data-project-id="H25008">H25008 MIA (Validé)</a>
+                        <a href="fiche-projet.html?id=H25008" class="small fw-bold text-success project-link d-block">H25008 MIA (Validé)</a>
                         <div class="progress" style="height: 10px;">
                             <div class="progress-bar bg-success" role="progressbar" style="width: 85%" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                         <p class="text-muted small mt-1">Échéance : 30/08/2025 (Déploiement en cours)</p>
                     </div>
                     <div class="timeline-item mb-0 filterable-item-timeline">
-                        <a href="#" class="small fw-bold text-primary project-link d-block" data-bs-toggle="modal" data-bs-target="#projectDetailModal" data-project-id="H25011">H25011 Les yeux de Samia (POC En Cours)</a>
+                        <a href="fiche-projet.html?id=H25011" class="small fw-bold text-primary project-link d-block">H25011 Les yeux de Samia (POC En Cours)</a>
                         <div class="progress" style="height: 10px;">
                             <div class="progress-bar bg-warning" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
@@ -633,12 +500,13 @@
                         <div class="matrix-label" style="top: 50%; left: 5px; transform: translateY(-50%) rotate(-90deg) translateX(-50%);">Risque Faible <i class="fas fa-arrow-left"></i></div>
                         <div class="matrix-label" style="top: 50%; right: 5px; transform: translateY(-50%) rotate(90deg) translateX(-50%);">Risque Élevé <i class="fas fa-arrow-right"></i></div>
                         
-                        <a href="#" class="matrix-project-dot bg-danger" data-bs-toggle="modal" data-bs-target="#projectDetailModal" data-project-id="H25006" style="top: 10%; right: 15%;" title="H25006 - Flux 4G (Risque Élevé, Impact Élevé)"></a>
-                        <a href="#" class="matrix-project-dot bg-primary" data-bs-toggle="modal" data-bs-target="#projectDetailModal" data-project-id="H25008" style="bottom: 10%; right: 40%;" title="H25008 - MIA (Quick Win) (Risque Faible, Impact Élevé)"></a>
-                        <a href="#" class="matrix-project-dot bg-success" data-bs-toggle="modal" data-bs-target="#projectDetailModal" data-project-id="H25001" style="top: 25%; left: 30%;" title="H25001 - Jean-Paul IA (Risque Élevé, Impact Faible)"></a>
-                        <a href="#" class="matrix-project-dot bg-secondary" data-bs-toggle="modal" data-bs-target="#projectDetailModal" data-project-id="H25014" style="bottom: 20%; left: 25%;" title="H25014 - Plateforme Contenus (Risque Faible, Impact Faible)"></a>
-                        <a href="#" class="matrix-project-dot bg-info" data-bs-toggle="modal" data-bs-target="#projectDetailModal" data-project-id="H25011" style="top: 40%; right: 30%;" title="H25011 - Samia (Risque Élevé, Impact Moyen)"></a>
-                        <a href="#" class="matrix-project-dot bg-warning" data-bs-toggle="modal" data-bs-target="#projectDetailModal" data-project-id="H25007" style="bottom: 30%; right: 10%;" title="H25007 - Conformité Musiq3 (Risque Faible, Impact Moyen)"></a>
+
+                        <div class="matrix-project-dot bg-danger" style="top: 10%; right: 15%;" title="H25006 - Flux 4G (Risque Élevé, Impact Élevé)"></div>
+                        <div class="matrix-project-dot bg-primary" style="bottom: 10%; right: 40%;" title="H25008 - MIA (Quick Win) (Risque Faible, Impact Élevé)"></div>
+                        <div class="matrix-project-dot bg-success" style="top: 25%; left: 30%;" title="H25001 - Jean-Paul IA (Risque Élevé, Impact Faible)"></div>
+                        <div class="matrix-project-dot bg-secondary" style="bottom: 20%; left: 25%;" title="H25014 - Plateforme Contenus (Risque Faible, Impact Faible)"></div>
+                        <div class="matrix-project-dot bg-info" style="top: 40%; right: 30%;" title="H25011 - Samia (Risque Élevé, Impact Moyen)"></div>
+                        <div class="matrix-project-dot bg-warning" style="bottom: 30%; right: 10%;" title="H25007 - Conformité Musiq3 (Risque Faible, Impact Moyen)"></div>
                         
                     </div>
                     
@@ -655,9 +523,7 @@
                     <div class="d-flex align-items-center success-item mb-3">
                         <div class="text-success me-3"><i class="fas fa-medal fa-2x"></i></div>
                         <div>
-                            <p class="fw-bold mb-0 small text-dark">
-                                Lancement réussi : **<a href="#" class="project-link" data-bs-toggle="modal" data-bs-target="#projectDetailModal" data-project-id="H25008">MIA (H25008)</a>**
-                            </p>
+                            <p class="fw-bold mb-0 small text-dark">Lancement réussi : **MIA (H25008)**</p>
                             <span class="badge bg-success">ÉQUIPE : VAH, LEL</span>
                         </div>
                     </div>
@@ -665,9 +531,7 @@
                     <div class="d-flex align-items-center success-item mb-3">
                         <div class="text-primary me-3"><i class="fas fa-star fa-2x"></i></div>
                         <div>
-                            <p class="fw-bold mb-0 small text-dark">
-                                Idée la plus prometteuse : **<a href="registre.html?search=vision_x" class="project-link">Vision X</a>**
-                            </p>
+                            <p class="fw-bold mb-0 small text-dark">Idée la plus prometteuse : **Vision X**</p>
                             <span class="badge bg-primary">CONTRIBUTEUR : AHH</span>
                         </div>
                     </div>
@@ -686,151 +550,37 @@
                 </div>
             </div>
              <div class="col-lg-8">
-                <div class="chart-container kpi-card h-100 p-4 funnel-chart">
-                    <h4 class="fw-bold text-primary mb-3"><i class="fas fa-funnel-dollar me-2"></i> Tunnel de Conversion de l'Innovation</h4>
-                    <p class="small text-muted mb-4">Suivi du taux de conversion des idées en projets déployés.</p>
+                <div class="chart-container kpi-card h-100 p-4">
+                    <h4 class="fw-bold text-primary mb-3"><i class="fas fa-chart-pie me-2"></i> Répartition des Projets par Domaine</h4>
+                    <p class="small text-muted mb-4">Ventilation des 19 projets totaux selon leur domaine de contribution (basé sur le `registre.html`).</p>
                     
-                    <a href="registre.html?statut=idee" class="funnel-link" title="Voir les 30 idées soumises">
-                        <div class="funnel-step bg-info" style="width: 90%;">
-                            Idées Soumises (30)
+                    <div class="d-flex align-items-center justify-content-around h-75">
+                        <div class="donut-chart-container" style="width: 200px; height: 200px;">
                         </div>
-                    </a>
-                    <a href="registre.html?statut=analyse" class="funnel-link" title="Voir les 21 idées en analyse">
-                        <div class="funnel-step bg-primary" style="width: 70%;">
-                            Analyse & Validation (21) - **Taux de Conversion 70%**
+                        <div class="legend-container ps-4">
+                            <div class="mb-2"><span class="legend-dot" style="background-color: var(--bs-primary);"></span> Technique (6/19) <span class="fw-bold">(31,5%)</span></div>
+                            <div class="mb-2"><span class="legend-dot" style="background-color: var(--bs-success);"></span> Projet (5/19) <span class="fw-bold">(26,3%)</span></div>
+                            <div class="mb-2"><span class="legend-dot" style="background-color: var(--bs-warning);"></span> Diffusion & Marketing (4/19) <span class="fw-bold">(21,1%)</span></div>
+                            <div class="mb-2"><span class="legend-dot" style="background-color: var(--bs-info);"></span> Stratégie & Veille (4/19) <span class="fw-bold">(21,1%)</span></div>
+                            <div class="mt-4 pt-2 border-top">
+                                <span class="fw-bold">Total : 19 projets</span>
+                            </div>
                         </div>
-                    </a>
-                    <a href="registre.html?statut=poc" class="funnel-link" title="Voir les 13 POC/Exploration">
-                        <div class="funnel-step bg-warning" style="width: 45%;">
-                            POC/Exploration (13) - **Taux de Conversion 62%**
-                        </div>
-                    </a>
-                    <a href="registre.html?statut=valide" class="funnel-link" title="Voir les 7 déploiements terminés">
-                        <div class="funnel-step bg-success" style="width: 25%;">
-                            Déploiements (7) - **Taux de Conversion 54%**
-                        </div>
-                    </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // 1. BASE DE DONNÉES SIMULÉE
-        const projectData = [
-            { 
-                id: 'H25008', 
-                name: 'MIA (LLM Co-pilot)', 
-                statut: 'Validé / Déployé', 
-                statut_class: 'bg-success',
-                description_courte: 'L\'agent conversationnel utilisant le LLM est maintenant intégré à MediaSphere.', 
-                impact: 'Augmentation de l\'efficacité des équipes de 15%. Réduction du temps de recherche de 20%.', 
-                responsable: 'VAH, LEL', 
-                echeance: 'Q2 2025 (Déployé)' 
-            },
-            { 
-                id: 'H25005', 
-                name: 'Diffusion Légère Mobile', 
-                statut: 'POC En Cours', 
-                statut_class: 'bg-warning text-dark',
-                description_courte: 'Projet d\'optimisation des flux vidéo et audio pour appareils mobiles, visant une consommation réduite.', 
-                impact: 'Réduction des coûts de bande passante et meilleure accessibilité pour les utilisateurs éloignés.', 
-                responsable: 'ABRU, AHH', 
-                echeance: '01/07/2025' 
-            },
-            { 
-                id: 'H25006', 
-                name: 'Flux 4G (POC)', 
-                statut: 'En Tension / Retard', 
-                statut_class: 'bg-danger',
-                description_courte: 'Mise en place d\'un flux sécurisé et redondant pour les communications externes critiques.', 
-                impact: 'Faciliter le travail en mobilité et garantir la continuité des opérations (Projet Critique).', 
-                responsable: 'TGA', 
-                echeance: 'Reportée (cause : Dépendances réseau non livrées)' 
-            },
-            { 
-                id: 'H25001', 
-                name: 'Jean-Paul IA (Exploration)', 
-                statut: 'Idée à Analyser', 
-                statut_class: 'bg-info',
-                description_courte: 'Système d\'IA pour l\'aide à la décision stratégique basée sur l\'analyse des tendances du marché.', 
-                impact: 'Impact potentiel élevé sur la stratégie d\'entreprise (Risque lié à la ressource LEL).', 
-                responsable: 'LEL', 
-                echeance: 'Non définie (Phase d\'Idéation)' 
-            },
-            { 
-                id: 'H25011', 
-                name: 'Les yeux de Samia', 
-                statut: 'POC En Cours', 
-                statut_class: 'bg-warning text-dark',
-                description_courte: 'Outil d\'aide à la transcription vocale et à la traduction automatique pour la production média.', 
-                impact: 'Amélioration de l\'accessibilité, réduction du temps de sous-titrage de 50%.', 
-                responsable: 'HMA', 
-                echeance: '30/08/2025' 
-            },
-            { 
-                id: 'H25007', 
-                name: 'Conformité R128 Musiq3', 
-                statut: 'En cours (Réglementaire)', 
-                statut_class: 'bg-primary',
-                description_courte: 'Mise en conformité des niveaux sonores et de la balance audio pour la chaîne Musiq3 selon la norme R128.', 
-                impact: 'Conformité légale et garantie d\'une qualité audio standardisée et professionnelle.', 
-                responsable: 'RMT, VGU', 
-                echeance: '30/10/2025' 
-            },
-            { 
-                id: 'H25014', 
-                name: 'Plateforme Contenus', 
-                statut: 'Clôturée / Parking', 
-                statut_class: 'bg-secondary',
-                description_courte: 'Refonte de la plateforme de gestion des contenus. Projet temporairement mis en parking pour prioriser les POC à haut impact.', 
-                impact: 'Optimisation de l\'archivage et de la recherche (Objectif à long terme).', 
-                responsable: 'DUB', 
-                echeance: 'Clôturée (15/12/2025) - Reprise Q1 2026' 
-            }
-        ];
-
-        // 2. FONCTION POUR REMPLIR LA MODALE
-        function showProjectDetails(projectId) {
-            const project = projectData.find(p => p.id === projectId);
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('global-search-input');
             
-            // Si le projet n'est pas trouvé (ID non simulé), utiliser un fallback
-            if (!project) {
-                document.getElementById('modalProjectName').textContent = 'Détails du Projet Inconnu';
-                document.getElementById('modalProjectID').textContent = `ID: ${projectId} (Données non simulées)`;
-                document.getElementById('modalProjectDescription').textContent = 'Aucune donnée détaillée n\'est disponible en simulation pour ce projet. Veuillez consulter la fiche complète.';
-                document.getElementById('modalProjectImpact').innerHTML = '—';
-                document.getElementById('modalProjectResp').textContent = 'N/A';
-                document.getElementById('modalProjectEcheance').textContent = 'N/A';
-                
-                const statusSpan = document.getElementById('modalProjectStatut');
-                statusSpan.className = 'badge bg-secondary';
-                statusSpan.textContent = 'Non Démarré';
-                
-                document.getElementById('modalFullFicheLink').href = `fiche-projet.html?id=${projectId}`;
+            if (!searchInput) {
+                console.error("Erreur: L'élément d'entrée de recherche (ID: global-search-input) est introuvable.");
                 return;
             }
 
-            // Remplissage de la modale avec les données simulées
-            document.getElementById('modalProjectName').textContent = `${project.name}`;
-            document.getElementById('modalProjectID').textContent = `ID: ${project.id}`;
-            document.getElementById('modalProjectDescription').textContent = project.description_courte;
-            document.getElementById('modalProjectImpact').innerHTML = project.impact;
-            document.getElementById('modalProjectResp').textContent = project.responsable;
-            document.getElementById('modalProjectEcheance').textContent = project.echeance;
-            
-            // Statut
-            const statusSpan = document.getElementById('modalProjectStatut');
-            statusSpan.className = `badge ${project.statut_class}`;
-            statusSpan.textContent = project.statut;
-            
-            // Lien Fiche Complète
-            document.getElementById('modalFullFicheLink').href = `fiche-projet.html?id=${project.id}`;
-        }
-
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const searchInput = document.getElementById('global-search-input');
             const filterableTimelineItems = document.querySelectorAll('.filterable-item-timeline');
             const filterableAlertItems = document.querySelectorAll('.filterable-item-alert');
             
@@ -856,23 +606,8 @@
 
             searchInput.addEventListener('input', applyDashboardFilter);
             searchInput.addEventListener('paste', () => setTimeout(applyDashboardFilter, 0));
-
-
-            // 3. LOGIQUE D'OUVERTURE DE LA MODALE
-            document.querySelectorAll('[data-bs-target="#projectDetailModal"]').forEach(link => {
-                link.addEventListener('click', (event) => {
-                    event.preventDefault(); 
-                    
-                    // Récupère l'ID du projet
-                    const projectId = event.currentTarget.getAttribute('data-project-id');
-                    if (projectId) {
-                        showProjectDetails(projectId);
-                    }
-                });
-            });
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
-
