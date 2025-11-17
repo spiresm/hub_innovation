@@ -27,13 +27,6 @@
             background-color: white; 
             box-shadow: 0 0.5rem 1rem rgba(0,0,0,.05); /* Légère ombre pour la distinguer */
         }
-        
-        /* Correction : Assurer un espacement uniforme des colonnes de la première rangée */
-        .kpi-row > .col {
-            padding-left: var(--bs-gutter-x);
-            padding-right: var(--bs-gutter-x);
-        }
-        
         .kpi-card { 
             border: none; 
             border-radius: 0.75rem; 
@@ -145,7 +138,7 @@
         }
 
 
-        /* --- NOUVEAUX STYLES DONUT CHART (CORRECTION APPLIQUÉE) --- */
+        /* --- NOUVEAUX STYLES DONUT CHART (RÉINTÉGRATION CORRIGÉE) --- */
         .donut-chart-container {
             /* Correction cruciale : Force l'élément à être un carré pour que le conic-gradient fonctionne */
             aspect-ratio: 1 / 1; 
@@ -252,7 +245,7 @@
             </div>
         </div>
 
-        <div class="row kpi-row g-4 mb-5">
+        <div class="row g-4 mb-5">
             <div class="col-12 col-md-3">
                 <div class="card kpi-card p-4 text-center h-100 d-flex flex-column justify-content-center">
                     <i class="fas fa-project-diagram text-primary icon my-2"></i>
