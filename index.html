@@ -27,10 +27,11 @@
             background-color: white; 
             box-shadow: 0 0.5rem 1rem rgba(0,0,0,.05); /* Légère ombre pour la distinguer */
         }
-        /* Correction : Ajout d'une marge horizontale par défaut aux colonnes pour un espacement égal */
-        .row.g-4 > [class*="col-"] {
-            padding-left: calc(var(--bs-gutter-x) * .5);
-            padding-right: calc(var(--bs-gutter-x) * .5);
+        
+        /* Correction : Assurer un espacement uniforme des colonnes de la première rangée */
+        .kpi-row > .col {
+            padding-left: var(--bs-gutter-x);
+            padding-right: var(--bs-gutter-x);
         }
         
         .kpi-card { 
@@ -144,8 +145,12 @@
         }
 
 
-        /* --- NOUVEAUX STYLES DONUT CHART --- */
+        /* --- NOUVEAUX STYLES DONUT CHART (CORRECTION APPLIQUÉE) --- */
         .donut-chart-container {
+            /* Correction cruciale : Force l'élément à être un carré pour que le conic-gradient fonctionne */
+            aspect-ratio: 1 / 1; 
+            width: 200px; /* Taille fixe pour l'affichage */
+            
             border-radius: 50%;
             background: 
                 conic-gradient(
@@ -247,8 +252,8 @@
             </div>
         </div>
 
-        <div class="row row-cols-1 row-cols-md-4 g-4 mb-5">
-            <div class="col">
+        <div class="row kpi-row g-4 mb-5">
+            <div class="col-12 col-md-3">
                 <div class="card kpi-card p-4 text-center h-100 d-flex flex-column justify-content-center">
                     <i class="fas fa-project-diagram text-primary icon my-2"></i>
                     <div class="card-body p-0">
@@ -257,7 +262,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col">
+            <div class="col-12 col-md-3">
                 <div class="card kpi-card p-4 text-center h-100 d-flex flex-column justify-content-center">
                     <i class="fas fa-check-circle text-success icon my-2"></i>
                     <div class="card-body p-0">
@@ -267,7 +272,7 @@
                 </div>
             </div>
             
-            <div class="col">
+            <div class="col-12 col-md-3">
                 <div class="card kpi-card p-4 text-center bg-white h-100 d-flex flex-column justify-content-between">
                     <p class="text-muted small fw-bold mb-1">Santé Globale du Portefeuille</p>
                     <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center py-2">
@@ -281,7 +286,7 @@
                     <p class="text-muted small mb-0">Objectif atteint</p>
                 </div>
             </div>
-            <div class="col">
+            <div class="col-12 col-md-3">
                 <div class="card kpi-card p-4 text-center h-100 d-flex flex-column justify-content-center">
                     <i class="fas fa-lightbulb text-info icon my-2"></i>
                     <div class="card-body p-0">
@@ -559,8 +564,8 @@
                     <h4 class="fw-bold text-primary mb-3"><i class="fas fa-chart-pie me-2"></i> Répartition des Projets par Domaine</h4>
                     <p class="small text-muted mb-4">Ventilation des 19 projets totaux selon leur domaine de contribution (basé sur le `registre.html`).</p>
                     
-                    <div class="d-flex align-items-center justify-content-around" style="min-height: 250px;"> 
-                        <div class="donut-chart-container" style="width: 200px; height: 200px;">
+                    <div class="d-flex align-items-center justify-content-around h-100" style="min-height: 250px;"> 
+                        <div class="donut-chart-container"> 
                         </div>
                         <div class="legend-container ps-4">
                             <div class="mb-2"><span class="legend-dot" style="background-color: var(--bs-primary);"></span> Technique (6/19) <span class="fw-bold">(31,5%)</span></div>
