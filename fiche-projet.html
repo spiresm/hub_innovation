@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="page-title">Fiche Projet</title> 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet"> <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         :root {
@@ -14,9 +15,8 @@
             --bs-warning: #ffc107;
             --bs-info: #17a2b8;
             --bs-danger: #dc3545;
-            --bs-background-light: #f1f2f7; /* Variable ajoutée pour le fond unifié */
+            --bs-background-light: #f1f2f7;
         }
-        /* Correction de la typographie et du fond */
         body { 
             background-color: var(--bs-background-light); 
             font-family: 'Poppins', sans-serif; 
@@ -82,6 +82,7 @@
 </head>
 <body>
 
+    <!-- Modal d'ajout de projet (inchangé) -->
     <div class="modal fade" id="newProjectModal" tabindex="-1" aria-labelledby="newProjectModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -163,24 +164,10 @@
             </div>
         </div>
     </div>
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid px-5">
-            <a class="navbar-brand text-primary fw-bold fs-4" href="index.html">
-                <i class="fas fa-rocket me-2"></i> Tech Innovation Hub
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="index.html"><i class="fas fa-home me-1"></i> Accueil</a></li>
-                    <li class="nav-item"><a class="nav-link active fw-bold text-primary" href="registre.html"><i class="fas fa-book-open me-1"></i> Explorer les Projets</a></li>
-                    <li class="nav-item"><a class="nav-link" href="equipe.html"><i class="fas fa-users me-1"></i> Équipe</a></li> 
-                    <li class="nav-item ms-3"><a class="btn btn-primary" href="#" data-bs-toggle="modal" data-bs-target="#newProjectModal"><i class="fas fa-plus me-2"></i> Ajouter un Projet</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+
+    <!-- Header commun injecté -->
+    <div id="header-placeholder"></div>
+
     <div class="container-lg pt-4">
 
         <div class="d-flex justify-content-end align-items-center mb-3">
@@ -191,8 +178,7 @@
             <div class="col-lg-8">
                 
                 <div class="project-detail-header">
-                    <div id="project-header-image" class="text-center">
-                        </div>
+                    <div id="project-header-image" class="text-center"></div>
                     <div class="p-4">
                         <h1 id="project-nom" class="fw-bold text-dark"></h1>
                         <p id="project-description-courte" class="lead text-muted"></p>
@@ -208,14 +194,12 @@
 
                 <div class="info-block">
                     <h4><i class="fas fa-align-left me-2"></i> Description Détaillée</h4>
-                    <p id="project-description-detaillee" class="text-secondary">
-                        </p>
+                    <p id="project-description-detaillee" class="text-secondary"></p>
                 </div>
 
                 <div class="info-block">
                     <h4><i class="fas fa-tags me-2"></i> Mots-Clés</h4>
-                    <div id="keywords-list">
-                        </div>
+                    <div id="keywords-list"></div>
                 </div>
             </div>
             
@@ -230,18 +214,15 @@
 
                 <div class="info-block">
                     <h4><i class="fas fa-users me-2"></i> L'Équipe du Projet</h4>
-                    <div id="team-members-list">
-                        </div>
+                    <div id="team-members-list"></div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // DONNÉES DE PROJETS (Correction des statuts incohérents)
         const projectsData = [
             { 
-                // CORRECTION DU STATUT : DE "Non démarré" à "En cours" (Progression: 60)
                 id: "H25001", nom: "Jean-Paul IA", description_courte: "LLM technodoc", statut: "En cours", responsable: "HMA", contribution: "Stratégie", echeance: "30/06/2026", icon: "fas fa-brain", image_id: "images/jean_paul_ia.jpg", progression: 60,
                 description_detaillee: "Le projet Jean-Paul IA vise à intégrer un grand modèle de langage (LLM) dans l'environnement intranet pour faciliter l'accès à la documentation technique, la recherche rapide et la génération de résumés complexes. L'objectif est d'améliorer l'efficacité des équipes de support et de développement en fournissant des réponses instantanées et précises basées sur notre base de connaissances interne. Le POC initial se concentre sur l'indexation des documents de production.",
                 equipe: [{initiales: "LEL", nom: "Laura ELM", role: "Chef de Projet"}, {initiales: "HMA", nom: "Hugo MAUX", role: "Coach IA"}, {initiales: "TFG", nom: "Thierry GAUDIER", role: "Développeur Principal"}], 
@@ -278,7 +259,6 @@
                 mots_cles: ["4G", "Radio", "Réseau", "QoS", "Bonding"]
             },
             { 
-                // CORRECTION DU STATUT : DE "Non démarré" à "En cours" (Progression: 80)
                 id: "H25007", nom: "Conformité R128 Musiq3", description_courte: "Mise en conformité des contenus audio de Musiq3 à la norme R128 (Loudness).", statut: "En cours", responsable: "CPU", contribution: "Stratégie", echeance: "30/10/2025", icon: "fas fa-volume-up", image_id: "images/conformite_r128.jpg", progression: 80,
                 description_detaillee: "Standardisation du niveau sonore (Loudness) des programmes de la chaîne Musiq3 selon la norme EBU R128. Ceci implique la mise à jour des workflows de post-production et l'acquisition d'outils de mesure pour garantir une expérience d'écoute homogène. Phase d'intégration en cours.",
                 equipe: [{initiales: "CPU", nom: "Claire POU", role: "Chef de Projet"}, {initiales: "ETRHO", nom: "Eric RHO", role: "Expert Audio"}],
@@ -358,7 +338,6 @@
             }
         ];
 
-        // Fonction pour déterminer la classe CSS du statut (Corrigé pour Clôturée)
         function getStatusClass(statut) {
             if (statut === 'Validé') return 'bg-success';
             if (statut === 'POC En Cours' || statut === 'En cours' || statut === 'En concept') return 'bg-info';
@@ -370,7 +349,6 @@
         }
 
         function loadProjectDetails() {
-            // 1. Récupérer l'ID du projet depuis l'URL
             const urlParams = new URLSearchParams(window.location.search);
             const projectId = urlParams.get('id');
 
@@ -379,7 +357,6 @@
                 return;
             }
 
-            // 2. Trouver le projet correspondant
             const project = projectsData.find(p => p.id === projectId);
 
             if (!project) {
@@ -387,7 +364,6 @@
                 return;
             }
             
-            // 3. AFFICHAGE DES DÉTAILS DE BASE
             document.getElementById('page-title').textContent = `Fiche Projet - ${project.nom}`;
             document.getElementById('project-nom').textContent = project.nom;
             document.getElementById('project-description-courte').textContent = project.description_courte;
@@ -397,13 +373,10 @@
             document.getElementById('project-id-info').textContent = project.id;
             document.getElementById('project-id-top-display').textContent = project.id;
             
-            // AFFICHAGE DU STATUT (Badge)
             const statusBadge = document.getElementById('project-status-badge');
             const statusClass = getStatusClass(project.statut);
             statusBadge.innerHTML = `<span class="badge rounded-pill ${statusClass} fs-6">${project.statut}</span>`;
 
-
-            // 4. GESTION DE L'IMAGE DE HAUT DE PAGE
             const headerImageContainer = document.getElementById('project-header-image');
             if (project.image_id) {
                 headerImageContainer.innerHTML = `<img src="${project.image_id}" alt="Illustration du projet ${project.nom}" class="header-illustration">`;
@@ -411,8 +384,6 @@
                 headerImageContainer.innerHTML = `<div class="header-illustration-placeholder"><i class="${project.icon} fa-5x"></i><p class="mt-3 small">Vignette indisponible</p></div>`;
             }
 
-
-            // 5. GESTION DE LA BARRE DE PROGRESSION
             const progressBarFill = document.getElementById('progress-bar-fill');
             const progressBarText = document.getElementById('progress-bar-text');
             const progression = project.progression;
@@ -421,7 +392,6 @@
             progressBarFill.setAttribute('aria-valuenow', progression);
             progressBarText.textContent = `${progression}%`;
 
-            // Style de la barre de progression selon le statut/progression
             let barClass = 'bg-primary';
             if (progression === 100) {
                 barClass = 'bg-success';
@@ -430,7 +400,6 @@
             }
             progressBarFill.className = `progress-bar ${barClass}`;
             
-            // 6. GESTION DE L'ÉQUIPE
             const teamListContainer = document.getElementById('team-members-list');
             teamListContainer.innerHTML = '';
             
@@ -449,7 +418,6 @@
                 teamListContainer.innerHTML += memberHtml;
             });
 
-            // 7. GESTION DES MOTS-CLÉS
             const keywordsListContainer = document.getElementById('keywords-list');
             keywordsListContainer.innerHTML = '';
 
@@ -458,8 +426,44 @@
                 keywordsListContainer.innerHTML += keywordHtml;
             });
         }
+    </script>
 
-        window.onload = loadProjectDetails;
+    <!-- Injection du header + lien actif + chargement de la fiche -->
+    <script>
+        function includeHTML(callback) {
+            const headerPlaceholder = document.getElementById('header-placeholder');
+            if (headerPlaceholder) {
+                fetch('header.html')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Erreur de chargement du header.html');
+                        }
+                        return response.text();
+                    })
+                    .then(data => {
+                        headerPlaceholder.innerHTML = data;
+                        if (callback) callback();
+                    })
+                    .catch(error => console.error(error));
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            includeHTML(() => {
+                const path = window.location.pathname.split('/').pop();
+                document.querySelectorAll('#navbarNav .nav-link').forEach(link => {
+                    if (link.getAttribute('href') === path) {
+                        link.classList.add('active', 'fw-bold', 'text-primary');
+                        link.classList.remove('text-dark');
+                    } else {
+                        link.classList.add('text-dark');
+                    }
+                });
+            });
+
+            // Charger les détails du projet une fois le DOM prêt
+            loadProjectDetails();
+        });
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
