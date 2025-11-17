@@ -184,6 +184,88 @@
     </style>
 </head>
 <body class="bg-body-tertiary">
+
+    <div class="modal fade" id="newProjectModal" tabindex="-1" aria-labelledby="newProjectModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newProjectModalLabel"><i class="fas fa-plus-circle me-2"></i> Ajouter un Nouveau Projet</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form name="nouveau_projet" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/success" enctype="multipart/form-data">
+                    <input type="hidden" name="form-name" value="nouveau_projet" />
+                    <p class="d-none">
+                        <label>Don’t fill this out if you’re human: <input name="bot-field" /></label>
+                    </p>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="projectNom" class="form-label fw-bold">Nom du Projet *</label>
+                                    <input type="text" class="form-control" id="projectNom" name="nom" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="projectResponsable" class="form-label fw-bold">Responsable (Initiales) *</label>
+                                    <input type="text" class="form-control" id="projectResponsable" name="responsable" placeholder="Ex: LEL, HMA" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="projectContribution" class="form-label fw-bold">Domaine de Contribution *</label>
+                                    <select id="projectContribution" class="form-select" name="contribution" required>
+                                        <option value="">Sélectionner...</option>
+                                        <option value="Stratégie">Stratégie</option>
+                                        <option value="Projet">Projet</option>
+                                        <option value="Veille">Veille</option>
+                                        <option value="Marketing">Marketing</option>
+                                        <option value="Diffusion">Diffusion</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="projectStatut" class="form-label fw-bold">Statut Initial *</label>
+                                    <select id="projectStatut" class="form-select" name="statut" required>
+                                        <option value="Idée à Analyser" selected>Idée / à Analyser</option>
+                                        <option value="POC">POC</option>
+                                        <option value="En cours">En cours</option>
+                                        <option value="Validé">Validé</option>
+                                        <option value="Non démarré">Non démarré / Parking</option>
+                                        <option value="Clôturée">Clôturée</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="projectDescriptionCourte" class="form-label fw-bold">Description Courte *</label>
+                                    <input type="text" class="form-control" id="projectDescriptionCourte" name="description_courte" placeholder="Max 100 caractères" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="projectDescriptionDetaillee" class="form-label fw-bold">Description Détaillée</label>
+                                    <textarea class="form-control" id="projectDescriptionDetaillee" name="description_detaillee" rows="3"></textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="projectVignette" class="form-label fw-bold">Vignette d'Illustration (Image)</label>
+                                    <input type="file" class="form-control" id="projectVignette" name="vignette" accept="image/*">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="projectMotsCles" class="form-label fw-bold">Mots-clés (séparés par des virgules)</label>
+                                    <input type="text" class="form-control" id="projectMotsCles" name="mots_cles" placeholder="Ex: IA, Cloud, Veille">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="projectEcheance" class="form-label fw-bold">Échéance (Date)</label>
+                                    <input type="date" class="form-control" id="projectEcheance" name="echeance">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane me-2"></i> Soumettre le Projet</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid px-5">
             <a class="navbar-brand text-primary fw-bold fs-4" href="index.html">
@@ -197,16 +279,22 @@
                     <li class="nav-item"><a class="nav-link active fw-bold text-primary" href="index.html"><i class="fas fa-home me-1"></i> Accueil</a></li>
                     <li class="nav-item"><a class="nav-link" href="registre.html"><i class="fas fa-book-open me-1"></i> Explorer les Projets</a></li>
                     <li class="nav-item"><a class="nav-link" href="equipe.html"><i class="fas fa-users me-1"></i> Équipe</a></li> 
-                    <li class="nav-item ms-3"><a class="btn btn-primary" href="soumettre-idee.html"><i class="fas fa-lightbulb me-2"></i> Soumettre une Idée</a></li>
+                    <li class="nav-item ms-3"><a class="btn btn-primary" href="#" data-bs-toggle="modal" data-bs-target="#newProjectModal"><i class="fas fa-plus me-2"></i> Ajouter un Projet</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <div class="container my-5">
-        <h1 class="fw-bolder mb-1">Tableau de Bord de l'Innovation HIT</h1>
+        <div class="row align-items-center mb-1">
+            <div class="col-md-9">
+                <h1 class="fw-bolder mb-0">Tableau de Bord de l'Innovation HIT</h1>
+            </div>
+            <div class="col-md-3 text-end">
+                <a class="btn btn-primary" href="soumettre-idee.html"><i class="fas fa-lightbulb me-2"></i> Soumettre une Idée</a>
+            </div>
+        </div>
         <p class="text-muted mb-4">Aperçu stratégique du portefeuille d'innovation Technos.</p>
-        
         <div class="row mb-5">
             <div class="col-lg-12">
                 <div class="input-group input-group-lg kpi-card">
