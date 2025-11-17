@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registre de Projets - Tech Innovation Hub</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
@@ -18,11 +15,7 @@
             --bs-info: #17a2b8;
             --bs-background-light: #f1f2f7; 
         }
-        /* MODIFIÉ : Application de la police Poppins */
-        body { 
-            background-color: var(--bs-background-light); 
-            font-family: 'Poppins', sans-serif; 
-        }
+        body { background-color: var(--bs-background-light); }
         .navbar { 
             background-color: white; 
             box-shadow: 0 0.5rem 1rem rgba(0,0,0,.05);
@@ -218,10 +211,10 @@
     </div>
 
     <script>
-        // DONNÉES DE PROJETS (Conservées)
+        // DONNÉES DE PROJETS (Correction des statuts incohérents)
         const projectsData = [
             { 
-                id: "H25001", nom: "Jean-Paul IA", description_courte: "LLM technodoc", statut: "Non démarré", responsable: "HMA", contribution: "Stratégie", echeance: "30/06/2026", icon: "fas fa-brain", image_id: "images/jean_paul_ia.jpg", progression: 60,
+                id: "H25001", nom: "Jean-Paul IA", description_courte: "LLM technodoc", statut: "En cours", responsable: "HMA", contribution: "Stratégie", echeance: "30/06/2026", icon: "fas fa-brain", image_id: "images/jean_paul_ia.jpg", progression: 60,
                 description_detaillee: "Le projet Jean-Paul IA vise à intégrer un grand modèle de langage (LLM) dans l'environnement intranet pour faciliter l'accès à la documentation technique, la recherche rapide et la génération de résumés complexes. L'objectif est d'améliorer l'efficacité des équipes de support et de développement en fournissant des réponses instantanées et précises basées sur notre base de connaissances interne. Le POC initial se concentre sur l'indexation des documents de production.",
                 equipe: [{initiales: "LEL", nom: "Laura ELM", role: "Chef de Projet"}, {initiales: "HMA", nom: "Hugo MAUX", role: "Coach IA"}, {initiales: "TFG", nom: "Thierry GAUDIER", role: "Développeur Principal"}], 
                 mots_cles: ["IA", "LLM", "Documentation", "Intranet", "Technologie"]
@@ -257,7 +250,7 @@
                 mots_cles: ["4G", "Radio", "Réseau", "QoS", "Bonding"]
             },
             { 
-                id: "H25007", nom: "Conformité R128 Musiq3", description_courte: "Mise en conformité des contenus audio de Musiq3 à la norme R128 (Loudness).", statut: "Non démarré", responsable: "CPU", contribution: "Stratégie", echeance: "30/10/2025", icon: "fas fa-volume-up", image_id: "images/conformite_r128.jpg", progression: 80,
+                id: "H25007", nom: "Conformité R128 Musiq3", description_courte: "Mise en conformité des contenus audio de Musiq3 à la norme R128 (Loudness).", statut: "En cours", responsable: "CPU", contribution: "Stratégie", echeance: "30/10/2025", icon: "fas fa-volume-up", image_id: "images/conformite_r128.jpg", progression: 80,
                 description_detaillee: "Standardisation du niveau sonore (Loudness) des programmes de la chaîne Musiq3 selon la norme EBU R128. Ceci implique la mise à jour des workflows de post-production et l'acquisition d'outils de mesure pour garantir une expérience d'écoute homogène. Phase d'intégration en cours.",
                 equipe: [{initiales: "CPU", nom: "Claire POU", role: "Chef de Projet"}, {initiales: "ETRHO", nom: "Eric RHO", role: "Expert Audio"}],
                 mots_cles: ["Audio", "R128", "Loudness", "Production", "Conformité"]
@@ -354,7 +347,7 @@
             return 'bg-secondary';
         }
 
-        // Fonction pour créer une carte de projet
+        // Fonction pour créer une carte de projet (Aucun changement)
         function createProjectCard(project) {
             let imageContent;
             
@@ -393,6 +386,8 @@
             return cardHtml;
         }
 
+        // ... (Fonctions renderProjects et applyFilters conservées) ...
+
         function renderProjects(data) {
             projectList.innerHTML = '';
             if (data.length === 0) {
@@ -428,7 +423,7 @@
             renderProjects(filteredData);
         }
         
-        // Événements
+        // Événements (Conservés)
         statutFilter.addEventListener('change', applyFilters);
         responsableFilter.addEventListener('keyup', applyFilters);
         contributionFilter.addEventListener('change', applyFilters);
@@ -445,16 +440,15 @@
         applyFilters();
 
 
-        // LOGIQUE D'INCLUSION DU HEADER
+        // NOUVEAU: Logique d'inclusion du header
         function includeHTML(callback) {
             const headerPlaceholder = document.getElementById('header-placeholder');
             if (headerPlaceholder) {
-                // Le navigateur doit être sur http:// ou https:// pour que fetch() fonctionne
+                // Assurez-vous que le fichier header.html est accessible à la racine de votre site
                 fetch('header.html')
                     .then(response => {
                         if (!response.ok) {
-                            // Si le fichier est manquant ou inaccessible, nous le signalons
-                            throw new Error('Erreur de chargement du header.html. Vérifiez votre serveur local.');
+                            throw new Error('Erreur de chargement du header.html');
                         }
                         return response.text();
                     })
