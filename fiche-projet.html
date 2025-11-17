@@ -72,18 +72,12 @@
             margin-right: 0.75rem;
             flex-shrink: 0;
         }
-        /* Customisation des avatars basées sur la première lettre des initiales pour la démo */
-        .avatar[data-initials="L"] { background-color: var(--bs-primary); } /* LEL/Léa LELOUCHE */
-        .avatar[data-initials="H"] { background-color: var(--bs-success); } /* HMA/Hélène MARCOUX */
-        .avatar[data-initials="T"] { background-color: var(--bs-info); }    /* TGA/Thierry GAUDIER */
-        .avatar[data-initials="A"] { background-color: var(--bs-warning); } /* ABRU/Alice BRUN */
-        .avatar[data-initials="D"] { background-color: #6f42c1; } /* DUB/Denis DUBREUIL */
-        .avatar[data-initials="R"] { background-color: var(--bs-danger); } /* RMT/Renaud MARTOU */
-        .avatar[data-initials="V"] { background-color: #fd7e14; } /* VAH/VGU */
-        /* Règle spécifique pour "A DEFINIR" */
-        .avatar[data-initials="A"][data-initials^="A "], .avatar[data-initials="À"] { 
-            background-color: #6c757d; /* Gris pour les inconnus/À définir */
-        } 
+        .avatar[data-initials="L"] { background-color: var(--bs-primary); }
+        .avatar[data-initials="H"] { background-color: var(--bs-success); }
+        .avatar[data-initials="T"] { background-color: var(--bs-info); }
+        .avatar[data-initials="A"] { background-color: var(--bs-warning); }
+        .avatar[data-initials="C"] { background-color: var(--bs-danger); }
+        .avatar[data-initials="E"] { background-color: #6f42c1; } 
     </style>
 </head>
 <body>
@@ -120,11 +114,6 @@
                                         <option value="Veille">Veille</option>
                                         <option value="Marketing">Marketing</option>
                                         <option value="Diffusion">Diffusion</option>
-                                        <option value="Cloud">Cloud</option>
-                                        <option value="IA">IA</option>
-                                        <option value="Process">Process</option>
-                                        <option value="Contenus">Contenus</option>
-                                        <option value="Workflows">Workflows</option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
@@ -203,10 +192,6 @@
                 
                 <div class="project-detail-header">
                     <div id="project-header-image" class="text-center">
-                        <div class="header-illustration-placeholder">
-                            <i class="fas fa-rocket fa-4x mb-3"></i>
-                            <p class="mb-0">Chargement de l'illustration...</p>
-                        </div>
                         </div>
                     <div class="p-4">
                         <h1 id="project-nom" class="fw-bold text-dark"></h1>
@@ -222,440 +207,212 @@
                 </div>
 
                 <div class="info-block">
-                    <h4><i class="fas fa-align-left me-2 text-primary"></i> Description Détaillée</h4>
-                    <p id="project-description-detaillee" class="text-secondary"></p>
+                    <h4><i class="fas fa-align-left me-2"></i> Description Détaillée</h4>
+                    <p id="project-description-detaillee" class="text-secondary">
+                        </p>
                 </div>
-                
+
                 <div class="info-block">
-                    <h4><i class="fas fa-tags me-2 text-primary"></i> Mots-clés</h4>
+                    <h4><i class="fas fa-tags me-2"></i> Mots-Clés</h4>
                     <div id="keywords-list">
                         </div>
                 </div>
             </div>
             
             <div class="col-lg-4">
+
                 <div class="info-block">
-                    <h4><i class="fas fa-info-circle me-2 text-primary"></i> Détails Clés</h4>
-                    <ul class="list-group list-group-flush small">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <strong><i class="fas fa-user-tie me-2"></i> Responsable:</strong>
-                            <span id="project-responsable" class="fw-bold"></span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <strong><i class="fas fa-layer-group me-2"></i> Contribution:</strong>
-                            <span id="project-contribution"></span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <strong><i class="fas fa-calendar-alt me-2"></i> Démarrage:</strong>
-                            <span id="project-date-demarrage">N/A</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <strong><i class="fas fa-hourglass-end me-2"></i> Fin Prévue:</strong>
-                            <span id="project-echeance">N/A</span>
-                        </li>
-                    </ul>
+                    <h4><i class="fas fa-info-circle me-2"></i> Informations Clés</h4>
+                    <div class="mb-2"><strong><i class="fas fa-calendar-alt me-2"></i> Échéance:</strong> <span id="project-echeance"></span></div>
+                    <div class="mb-2"><strong><i class="fas fa-tag me-2"></i> Contribution:</strong> <span id="project-contribution"></span></div>
+                    <div class="mb-2"><strong><i class="fas fa-list-ol me-2"></i> ID Projet:</strong> <span id="project-id-info"></span></div> 
                 </div>
+
                 <div class="info-block">
-                    <h4><i class="fas fa-users me-2 text-primary"></i> Équipe Projet</h4>
+                    <h4><i class="fas fa-users me-2"></i> L'Équipe du Projet</h4>
                     <div id="team-members-list">
                         </div>
                 </div>
             </div>
         </div>
-
     </div>
 
     <script>
-        // 1. DÉFINITION DES DONNÉES DE PROJET (Base de données corrigée)
+        // DONNÉES DE PROJETS (Correction des statuts incohérents)
         const projectsData = [
-            {
-                id: "H25001",
-                nom: "Jean-Paul IA",
-                description_courte: "Prototype d'assistant IA pour l'aide à la décision stratégique.",
-                statut: "En cours",
-                responsable: "LEL",
-                contribution: "Stratégie",
-                echeance: "30/06/2026",
-                icon: "fas fa-brain",
-                image_id: "images/jean_paul_ia.jpg",
-                progression: 60,
+            { 
+                // CORRECTION DU STATUT : DE "Non démarré" à "En cours" (Progression: 60)
+                id: "H25001", nom: "Jean-Paul IA", description_courte: "LLM technodoc", statut: "En cours", responsable: "HMA", contribution: "Stratégie", echeance: "30/06/2026", icon: "fas fa-brain", image_id: "images/jean_paul_ia.jpg", progression: 60,
                 description_detaillee: "Le projet Jean-Paul IA vise à intégrer un grand modèle de langage (LLM) dans l'environnement intranet pour faciliter l'accès à la documentation technique, la recherche rapide et la génération de résumés complexes. L'objectif est d'améliorer l'efficacité des équipes de support et de développement en fournissant des réponses instantanées et précises basées sur notre base de connaissances interne. Le POC initial se concentre sur l'indexation des documents de production.",
-                equipe: [
-                    {initiales: "LEL", nom: "Léa LELOUCHE", role: "Chef de Projet"},
-                    {initiales: "HMA", nom: "Hélène MARCOUX", role: "Coach IA"},
-                    {initiales: "TGA", nom: "Thierry GAUDIER", role: "Développeur Principal"}
-                ],
+                equipe: [{initiales: "LEL", nom: "Laura ELM", role: "Chef de Projet"}, {initiales: "HMA", nom: "Hugo MAUX", role: "Coach IA"}, {initiales: "TFG", nom: "Thierry GAUDIER", role: "Développeur Principal"}], 
                 mots_cles: ["IA", "LLM", "Documentation", "Intranet", "Technologie"]
             },
-            {
-                id: "H25002",
-                nom: "Cuno.IO",
-                description_courte: "Émuler un stockage local depuis un bucket S3 pour la veille technique.",
-                statut: "Terminé",
-                responsable: "DUB",
-                contribution: "Veille",
-                echeance: "31/03/2025",
-                icon: "fas fa-cloud-download-alt",
-                image_id: "images/cuno_io.jpg",
-                progression: 100,
-                description_detaillee: "Mise en place d'une solution permettant aux développeurs de traiter des données stockées dans un bucket S3 comme s'il s'agissait d'un volume de stockage local. Ceci permet d'optimiser les temps de développement et de test en évitant les longs téléchargements de données massives. Le POC a été validé et la solution est intégrée en production.",
-                equipe: [
-                    {initiales: "DUB", nom: "Denis DUBREUIL", role: "Expert développement d'applications"},
-                    {initiales: "RMT", nom: "Renaud MARTOU", role: "Délégué technique à la numérisation"}
-                ],
-                mots_cles: ["Cloud", "S3", "Veille", "Stockage", "Développement"]
+            { 
+                id: "H25002", nom: "Cuno.IO", description_courte: "Émuler un stockage local depuis un bucket S3 pour la veille technique.", statut: "Non démarré", responsable: "LEL", contribution: "Stratégie", echeance: "N/A", icon: "fas fa-cloud-upload-alt", image_id: "images/cuno_io.jpg", progression: 0,
+                description_detaillee: "Ce projet est une veille technologique visant à explorer des solutions permettant d'émuler un système de fichiers local basé sur un stockage objet cloud (S3). Le but est de simplifier l'accès aux données pour les outils legacy sans nécessiter une réarchitecture complète. Actuellement en phase d'évaluation des produits open source disponibles.",
+                equipe: [{initiales: "LEL", nom: "Laura ELM", role: "Porteur du sujet"}],
+                mots_cles: ["Cloud", "S3", "Stockage", "Veille", "Open Source"]
             },
-            {
-                id: "H25003",
-                nom: "Kit d'accélération Web",
-                description_courte: "Création d'un ensemble de templates pour automatiser la création et le déploiement des sites vitrines.",
-                statut: "Terminé",
-                responsable: "ABRU",
-                contribution: "Marketing",
-                echeance: "20/11/2025",
-                icon: "fas fa-code-branch",
-                image_id: "images/kit_web.jpg",
-                progression: 100,
-                description_detaillee: "Développement d'un ensemble de templates pour automatiser la création et le déploiement des sites vitrines (marketing) avec un minimum d'intervention manuelle. L'objectif d'accélération de la mise sur le marché a été atteint. Les outils sont désormais en production.",
-                equipe: [
-                    {initiales: "ABRU", nom: "Alice BRUN", role: "Responsable Marketing"},
-                    {initiales: "TGA", nom: "Thierry GAUDIER", role: "Intégrateur"}
-                ],
+            { 
+                id: "H25003", nom: "Segmentation Programme CGO", description_courte: "Segmentation du Programme CGO pour optimiser les ressources et les objectifs.", statut: "Idée à Analyser", responsable: "LEL", contribution: "Projet", echeance: "N/A", icon: "fas fa-chart-pie", image_id: "images/segmentation_cgo.jpg", progression: 10,
+                description_detaillee: "Analyse préliminaire nécessaire pour segmenter et prioriser les différentes composantes du Programme CGO. L'objectif est de définir des lots de travail clairs et mesurables pour une meilleure gestion du portefeuille de projets et une allocation plus efficace du budget.",
+                equipe: [{initiales: "LEL", nom: "Laura ELM", role: "Chef de Projet"}, {initiales: "ABRU", nom: "Alice BRUN", role: "PMO"}],
+                mots_cles: ["Programme", "Gestion", "Portefeuille", "Analyse"]
+            },
+            { 
+                id: "H25004", nom: "Vitrine", description_courte: "Automatiser la création et la publication des vitrines Marketing.", statut: "Clôturée", responsable: "ABRU", contribution: "Marketing", echeance: "08/10/2025", icon: "fas fa-desktop", image_id: "images/vitrines.jpg", progression: 100,
+                description_detaillee: "Projet clos. Mise en place d'un outil CI/CD et of templates pour automatiser la création et le déploiement des sites vitrines (marketing) avec un minimum d'intervention manuelle. L'objectif d'accélération de la mise sur le marché a été atteint. Les outils sont désormais en production.",
+                equipe: [{initiales: "ABRU", nom: "Alice BRUN", role: "Responsable Marketing"}, {initiales: "TFG", nom: "Thierry GAUDIER", role: "Intégrateur"}],
                 mots_cles: ["Marketing", "Automatisation", "CI/CD", "Web"]
             },
-            {
-                id: "H25004",
-                nom: "Archivage Intelligent",
-                description_courte: "Utilisation de l'IA pour catégoriser et indexer automatiquement les archives numériques.",
-                statut: "Parking",
-                responsable: "TGA",
-                contribution: "IA",
-                echeance: "30/06/2025",
-                icon: "fas fa-archive",
-                image_id: "images/archivage_intelligent.jpg",
-                progression: 20,
-                description_detaillee: "Un projet pilote qui vise à explorer l'utilisation d'algorithmes de machine learning pour la reconnaissance de motifs et l'extraction de métadonnées complexes à partir de documents archivés. L'objectif est de rendre les fonds d'archives plus accessibles et recherchables. Le projet est actuellement en pause faute de ressources.",
-                equipe: [
-                    {initiales: "TGA", nom: "Thierry GAUDIER", role: "Référent IA"},
-                    {initiales: "VAH", nom: "Valentina ABURTO HERMOSILLA", role: "Chargé de gestion"}
-                ],
-                mots_cles: ["Archive", "IA", "Indexation", "Contenus"]
-            },
-            {
-                id: "H25005",
-                nom: "Diffusion Légère Mobile",
-                description_courte: "Valider l'utilisation d'éléments mobiles dans le contexte de diffusion.",
-                statut: "POC",
-                responsable: "LEL",
-                contribution: "Diffusion",
-                echeance: "01/07/2025",
-                icon: "fas fa-mobile-alt",
-                image_id: "images/connection_mobile.jpg",
-                progression: 40,
+            { 
+                id: "H25005", nom: "Diffusion Légère Mobile", description_courte: "Valider l'utilisation d'éléments mobiles dans le contexte de diffusion.", statut: "POC", responsable: "LEL", contribution: "Diffusion", echeance: "01/07/2025", icon: "fas fa-mobile-alt", image_id: "images/connection_mobile.jpg", progression: 40,
                 description_detaillee: "Mener un POC (Proof of Concept) pour évaluer la fiabilité et la qualité de la diffusion en direct via des équipements légers et mobiles (smartphones, petits émetteurs 4G/5G). L'étude inclut des tests de latence et de robustesse du signal en conditions réelles. Un rapport final est attendu pour l'été.",
-                equipe: [
-                    {initiales: "LEL", nom: "Léa LELOUCHE", role: "Chef de Projet"},
-                    {initiales: "VGU", nom: "Vincent GUSTIN", role: "Délégué technique"}
-                ],
-                mots_cles: ["Mobile", "Diffusion", "4G/5G", "POC"]
+                equipe: [{initiales: "LEL", nom: "Laura ELM", role: "Chef de Projet"}, {initiales: "ETRHO", nom: "Eric RHO", role: "Technicien Diffusion"}], 
+                mots_cles: ["Diffusion", "Mobile", "4G/5G", "POC", "Streaming"]
             },
-            {
-                id: "H25006",
-                nom: "Espace de collaboration 'HIT'",
-                description_courte: "Mise en place d'un espace de travail collaboratif pour l'équipe HIT sur Sharepoint.",
-                statut: "Validé",
-                responsable: "ABRU",
-                contribution: "Projet",
-                echeance: "N/A",
-                icon: "fas fa-handshake",
-                image_id: "images/collaboration_space.jpg",
-                progression: 100,
-                description_detaillee: "Création de l'espace 'Hub Innovation Technos' sur Sharepoint, incluant des calendriers partagés, des bibliothèques de documents et un suivi des actions. L'espace sert de point central pour la gestion interne et la communication de l'équipe.",
-                equipe: [
-                    {initiales: "ABRU", nom: "Alice BRUN", role: "Chef de projet Infra"},
-                    {initiales: "VAH", nom: "Valentina ABURTO HERMOSILLA", role: "Chargé de gestion"}
-                ],
-                mots_cles: ["Sharepoint", "Collaboration", "Process", "Projet"]
+            { 
+                id: "H25006", nom: "Garantir flux 4G Radio Légère", description_courte: "parfois le signal 4G est saturé. Autre proposition...", statut: "Non démarré", responsable: "LEL", contribution: "Veille", echeance: "N/A", icon: "fas fa-broadcast-tower", image_id: "images/flux4g.jpg", progression: 0,
+                description_detaillee: "Face à la saturation ponctuelle du réseau 4G pour les unités de reportage légères, cette veille étudie des solutions d'agrégation de liens et de QoS (Quality of Service) pour garantir la stabilité et le débit des flux Radio. Les technologies de bonding sont la cible principale.",
+                equipe: [{initiales: "LEL", nom: "Laura ELM", role: "Porteur du sujet"}],
+                mots_cles: ["4G", "Radio", "Réseau", "QoS", "Bonding"]
             },
-            {
-                id: "H25007",
-                nom: "Normalisation Audio",
-                description_courte: "Standardisation des niveaux sonores dans les contenus avant diffusion (norme R128).",
-                statut: "En cours",
-                responsable: "A DEFINIR",
-                contribution: "Process",
-                echeance: "30/01/2026",
-                icon: "fas fa-volume-up",
-                image_id: "images/audio_norm.jpg",
-                progression: 30,
-                description_detaillee: "Le projet vise à intégrer de nouveaux outils et processus pour assurer la conformité de tous les contenus audio à la norme R128 (Loudness EBU R128) avant leur diffusion, garantissant une expérience sonore uniforme pour l'utilisateur final.",
-                equipe: [
-                    {initiales: "A DEFINIR", nom: "À définir", role: "Chef de Projet"},
-                    {initiales: "A DEFINIR", nom: "À définir", role: "Expert Audio"}
-                ],
+            { 
+                // CORRECTION DU STATUT : DE "Non démarré" à "En cours" (Progression: 80)
+                id: "H25007", nom: "Conformité R128 Musiq3", description_courte: "Mise en conformité des contenus audio de Musiq3 à la norme R128 (Loudness).", statut: "En cours", responsable: "CPU", contribution: "Stratégie", echeance: "30/10/2025", icon: "fas fa-volume-up", image_id: "images/conformite_r128.jpg", progression: 80,
+                description_detaillee: "Standardisation du niveau sonore (Loudness) des programmes de la chaîne Musiq3 selon la norme EBU R128. Ceci implique la mise à jour des workflows de post-production et l'acquisition d'outils de mesure pour garantir une expérience d'écoute homogène. Phase d'intégration en cours.",
+                equipe: [{initiales: "CPU", nom: "Claire POU", role: "Chef de Projet"}, {initiales: "ETRHO", nom: "Eric RHO", role: "Expert Audio"}],
                 mots_cles: ["Audio", "R128", "Loudness", "Production", "Conformité"]
             },
-            {
-                id: "H25008",
-                nom: "MIA (LLM Co-pilot)",
-                description_courte: "Utilisation d'un agent IA type copilot et d'un répertoire dans sharepoint pour valider le concept.",
-                statut: "POC",
-                responsable: "LEL",
-                contribution: "Stratégie",
-                echeance: "30/08/2025",
-                icon: "fas fa-robot",
-                image_id: "images/mia_llm.jpg",
-                progression: 80,
+            { 
+                id: "H25008", nom: "MIA (LLM Co-pilot)", description_courte: "Utilisation d'un agent IA type copilot et d'un répertoire dans sharepoint pour valider le concept.", statut: "En concept", responsable: "LEL", contribution: "Stratégie", echeance: "30/08/2025", icon: "fas fa-robot", image_id: "images/mia_llm.jpg", progression: 80,
                 description_detaillee: "Mise en place d'un chatbot 'MIA' basé sur un LLM (Large Language Model) capable d'interagir avec les utilisateurs pour répondre à des questions spécifiques sur la plateforme MediaSphere, simulant un co-pilote d'assistance technique. Le projet est en phase de test utilisateur avancé.",
-                equipe: [
-                    {initiales: "LEL", nom: "Léa LELOUCHE", role: "Chef de Projet"},
-                    {initiales: "HMA", nom: "Hélène MARCOUX", role: "Expert IA"},
-                    {initiales: "TGA", nom: "Thierry GAUDIER", role: "Développeur"}
-                ],
-                mots_cles: ["IA", "LLM", "Chatbot", "Co-pilot", "Support"]
+                equipe: [{initiales: "LEL", nom: "Laura ELM", role: "Chef de Projet"}, {initiales: "HMA", nom: "Hugo MAUX", role: "Expert IA"}, {initiales: "TFG", nom: "Thierry GAUDIER", role: "Développeur"}],
+                mots_cles: ["IA", "Chatbot", "LLM", "MediaSphere", "Assistance"]
             },
-            {
-                id: "H25009",
-                nom: "Ligne éditoriale du Hub Innovation",
-                description_courte: "Définition de la stratégie de communication externe et interne du Hub.",
-                statut: "Terminé",
-                responsable: "AHH",
-                contribution: "Marketing",
-                echeance: "N/A",
-                icon: "fas fa-bullhorn",
-                image_id: "images/editorial_line.jpg",
-                progression: 100,
-                description_detaillee: "Travail sur la création d'une charte éditoriale complète, y compris le ton, le style, les canaux et la fréquence des communications. Cela inclut le contenu des newsletters, des présentations et des mises à jour sur l'intranet.",
-                equipe: [
-                    {initiales: "AHH", nom: "Aurélien HUGO HAMELIN", role: "Chef de Projets Innovation"},
-                    {initiales: "LEL", nom: "Léa LELOUCHE", role: "Manager - Hub Innovation Technos"}
-                ],
-                mots_cles: ["Communication", "Marketing", "Stratégie", "Interne"]
+            { 
+                id: "H25009", nom: "AI driven voice e...", description_courte: "Mettre en place un outil capable de répondre à différentes questions à l'aide d'une interface avec un avatar.", statut: "Idée", responsable: "LEL", contribution: "Veille", echeance: "N/A", icon: "fas fa-headset", image_id: "images/ai_voice_editing.jpg", progression: 5,
+                description_detaillee: "Veille sur les technologies d'avatars et de synthèse vocale basées sur l'IA. L'objectif est d'étudier la faisabilité d'une interface utilisateur conversationnelle et visuelle pour des applications internes ou grand public. Le sujet est à un stade très précoce (simple idée).",
+                equipe: [{initiales: "LEL", nom: "Laura ELM", role: "Porteur du sujet"}],
+                mots_cles: ["IA", "Avatar", "Synthèse Vocale", "Veille", "UX"]
             },
-            {
-                id: "H25010",
-                nom: "Migration des Outils de production",
-                description_courte: "Évaluation de la faisabilité et du coût de la migration des outils de production vers le Cloud.",
-                statut: "Idée à Analyser",
-                responsable: "ABRU",
-                contribution: "Cloud",
-                echeance: "N/A",
-                icon: "fas fa-cloud-upload-alt",
-                image_id: "images/cloud_migration.jpg",
-                progression: 0,
-                description_detaillee: "Analyse approfondie de l'infrastructure actuelle de production et identification des dépendances techniques et des contraintes budgétaires pour une transition vers une architecture Cloud native ou hybride. Le but est d'améliorer la flexibilité et la scalabilité.",
-                equipe: [
-                    {initiales: "ABRU", nom: "Alice BRUN", role: "Architecte Solution"},
-                    {initiales: "RMT", nom: "Renaud MARTOU", role: "Expert Migration"}
-                ],
-                mots_cles: ["Cloud", "Migration", "Production", "Scalabilité"]
+            { 
+                id: "H25010", nom: "Bornes d'Apport Autonome", description_courte: "Création d'un prototype de borne d'apport autonome.", statut: "Clôturée", responsable: "ABRU", contribution: "Projet", echeance: "17/09/2025", icon: "fas fa-box-open", image_id: "images/bornes_autonomes.jpg", progression: 100,
+                description_detaillee: "Projet clos. Conception et réalisation d'un prototype de borne permettant l'apport de contenus par des contributeurs externes sans assistance humaine, simplifiant les workflows d'acquisition. Le prototype a été validé et est passé en phase d'industrialisation.",
+                equipe: [{initiales: "ABRU", nom: "Alice BRUN", role: "Chef de Projet"}, {initiales: "ASR", nom: "Amélie SER", role: "Designer UX/UI"}],
+                mots_cles: ["Acquisition", "Matériel", "Prototype", "Workflow"]
             },
-            {
-                id: "H25011",
-                nom: "Les yeux de Samia",
-                description_courte: "Un projet d'IA pour la reconnaissance d'éléments visuels dans les archives photos.",
-                statut: "POC",
-                responsable: "HMA",
-                contribution: "IA",
-                echeance: "30/08/2025",
-                icon: "fas fa-video",
-                image_id: "images/yeux_de_samia.jpg",
-                progression: 60,
+            { 
+                id: "H25011", nom: "Les yeux de Samia", description_courte: "Système permettant de voir si quelqu'un se trouve en face d'un micro donne autour d'une table dans un studio.", statut: "En cours", responsable: "ASR", contribution: "Stratégie", echeance: "30/08/2025", icon: "fas fa-video", image_id: "images/yeux_de_samia.jpg", progression: 60,
                 description_detaillee: "Développement d'un système de vision par ordinateur ('Les yeux de Samia') dans les studios pour analyser les scènes, détecter les mouvements et les positions, afin de générer ou de proposer automatiquement des presets de caméra. Le POC est en phase d'expérimentation en studio de répétition.",
-                equipe: [
-                    {initiales: "A DEFINIR", nom: "À définir", role: "Chef de Projet"},
-                    {initiales: "HMA", nom: "Hélène MARCOUX", role: "Expert Vision"}
-                ],
+                equipe: [{initiales: "ASR", nom: "Amélie SER", role: "Chef de Projet"}, {initiales: "HMA", nom: "Hugo MAUX", role: "Expert Vision"}],
                 mots_cles: ["Vision", "Studio", "IA", "Caméra", "Presets"]
             },
-            {
-                id: "H25012",
-                nom: "Reporting Portefeuille",
-                description_courte: "Créer, challenger des affichages de reporting pour la gouvernance de nos portefeuilles de projet",
-                statut: "POC",
-                responsable: "ABRU",
-                contribution: "Projet",
-                echeance: "N/A",
-                icon: "fas fa-chart-line",
-                image_id: "images/portfolio_dashboard.jpg",
-                progression: 40,
-                description_detaillee: "Conception d'un tableau de bord (Dashboard) pour la gouvernance, consolidant les données de planification et de portefeuille de projets. Le POC vise à tester la pertinence des indicateurs et l'ergonomie de l'outil de visualisation pour les décideurs.",
-                equipe: [
-                    {initiales: "ABRU", nom: "Alice BRUN", role: "PMO"},
-                    {initiales: "VAH", nom: "Valentina ABURTO HERMOSILLA", role: "Chargée de gestion"}
-                ],
-                mots_cles: ["Reporting", "Portefeuille", "Projet", "Gouvernance"]
+            { 
+                id: "H25012", nom: "Reporting Portefeuille", description_courte: "Créer, challenger des affichages de reporting pour la gouvernance de nos portefeuilles de projet", statut: "POC", responsable: "ABRU", contribution: "Projet", echeance: "N/A", icon: "fas fa-chart-line", image_id: "images/portfolio_dashboard.jpg", progression: 40,
+                description_detaillee: "Conception d'un tableau de bord (Dashboard) pour la gouvernance, consolidant les données de planification et de portefeuille de projets. Ce POC vise à tester les outils de visualisation et la pertinence des métriques pour les comités de direction.",
+                equipe: [{initiales: "ABRU", nom: "Alice BRUN", role: "PMO"}, {initiales: "CPU", nom: "Claire POU", role: "Data Analyst"}],
+                mots_cles: ["PMO", "Rapport", "Gouvernance", "Dashboard", "Planning"]
             },
-            {
-                id: "H25013",
-                nom: "Rédaction des P&P Contenus",
-                description_courte: "Mise à jour et clarification des procédures et politiques de gestion de contenus.",
-                statut: "Terminé",
-                responsable: "VAH",
-                contribution: "Contenus",
-                echeance: "N/A",
-                icon: "fas fa-file-alt",
-                image_id: "images/procedure_policy.jpg",
-                progression: 100,
-                description_detaillee: "Révision complète des documents de Procédures et Politiques (P&P) relatifs à l'acquisition, la gestion et la diffusion des contenus. L'objectif est de s'assurer de la clarté, de la conformité et de l'alignement avec les nouvelles plateformes techniques.",
-                equipe: [
-                    {initiales: "VAH", nom: "Valentina ABURTO HERMOSILLA", role: "Chargée de gestion"},
-                    {initiales: "AHH", nom: "Aurélien HUGO HAMELIN", role: "Coordinateur"}
-                ],
-                mots_cles: ["Contenus", "Politique", "Procédure", "Documentation"]
+            { 
+                id: "H25013", nom: "Alternative RPA", description_courte: "Trouver un outil de gestion de projets après la fin de vie de la solution RPA actuelle.", statut: "Idée à Analyser", responsable: "TFG", contribution: "Veille", echeance: "N/A", icon: "fas fa-robot", image_id: "images/alternative_rpa.jpg", progression: 10,
+                description_detaillee: "Suite à l'obsolescence ou la fin de vie du logiciel de Robot Process Automation (RPA), ce projet vise à identifier et évaluer une solution alternative moderne, se concentrant sur les plateformes 'Low-Code' ou 'No-Code' pour l'automatisation des processus. Phase de recueil des besoins en cours.",
+                equipe: [{initiales: "TFG", nom: "Thierry GAUDIER", role: "Porteur du sujet"}, {initiales: "CACE", nom: "Charles ACE", role: "Expert Processus"}],
+                mots_cles: ["RPA", "Automatisation", "Low-Code", "No-Code", "Veille"]
             },
-            {
-                id: "H25014",
-                nom: "Chatbot Vocal 2.0",
-                description_courte: "Évolution du chatbot pour intégrer la reconnaissance vocale et améliorer le FCR (First Call Resolution).",
-                statut: "Idée à Analyser",
-                responsable: "HMA",
-                contribution: "IA",
-                echeance: "N/A",
-                icon: "fas fa-comments",
-                image_id: "images/voice_chatbot.jpg",
-                progression: 0,
-                description_detaillee: "Recherche sur l'intégration d'un moteur de reconnaissance vocale et de synthèse vocale au chatbot existant. L'accent est mis sur l'amélioration du taux de résolution au premier contact (FCR) pour une meilleure satisfaction client/utilisateur.",
-                equipe: [
-                    {initiales: "LEL", nom: "Léa LELOUCHE", role: "Chef de Projet"},
-                    {initiales: "HMA", nom: "Hélène MARCOUX", role: "Expert IA"}
-                ],
-                mots_cles: ["Chatbot", "Vocal", "FCR", "IA", "Recherche"]
+            { 
+                id: "H25014", nom: "Plateforme Génération de Contenus", description_courte: "Plateforme collaborative de création de contenus (Politicité).", statut: "Clôturée", responsable: "ABRU", contribution: "Stratégie", echeance: "15/12/2025", icon: "fas fa-users", image_id: "images/plateforme_contenus.jpg", progression: 100,
+                description_detaillee: "Projet clos. Développement et déploiement d'une plateforme collaborative pour la création de contenus par différents contributeurs (Politicité). La plateforme est maintenant en production et gérée par l'équipe Contenus.",
+                equipe: [{initiales: "ABRU", nom: "Alice BRUN", role: "Chef de Projet"}],
+                mots_cles: ["Contenus", "Plateforme", "Collaboration", "Politicité"]
             },
-            {
-                id: "H25015",
-                nom: "COMPL AI",
-                description_courte: "Disposer d'un outil pour mesurer la conformité des LLM que nous utilisons par rapport à l'AI Act.",
-                statut: "Non démarré",
-                responsable: "A DEFINIR",
-                contribution: "Stratégie",
-                echeance: "N/A",
-                icon: "fas fa-gavel",
-                image_id: "images/compl_ai.jpg",
-                progression: 0,
+            { 
+                id: "H25015", nom: "COMPL AI", description_courte: "Disposer d'un outil pour mesurer la conformité des LLM que nous utilisons par rapport à l'AI Act.", statut: "Non démarré", responsable: "CACE", contribution: "Stratégie", echeance: "N/A", icon: "fas fa-gavel", image_id: "images/compl_ai.jpg", progression: 0,
                 description_detaillee: "Disposer d'un outil pour mesurer la conformité des LLM que nous utilisons par rapport à AI Act. L'objectif est de proposer une suite d'évaluations orientée LLM, d'offrir une première interprétation technique compréhensive de l'IA ACT.",
-                equipe: [
-                    {initiales: "A DEFINIR", nom: "À définir", role: "Responsable Conformité"},
-                    {initiales: "HMA", nom: "Hélène MARCOUX", role: "Expert IA"}
-                ],
+                equipe: [{initiales: "CACE", nom: "Charles ACE", role: "Responsable Conformité"}, {initiales: "HMA", nom: "Hugo MAUX", role: "Expert IA"}],
                 mots_cles: ["IA Act", "Conformité", "Réglementation", "LLM", "Stratégie"]
             },
-            {
-                id: "H25016",
-                nom: "WAIOH - HIT",
-                description_courte: "Analyse des solutions de voix de synthèse",
-                statut: "POC",
-                responsable: "LEL",
-                contribution: "Veille",
-                echeance: "N/A",
-                icon: "fas fa-volume-up",
-                image_id: "images/analyse_voix_synth.jpg",
-                progression: 10,
-                description_detaillee: "Étude et évaluation de la qualité, du coût et de l'intégration technique des différentes solutions de synthèse vocale disponibles sur le marché pour l'automatisation des voix-off.",
-                equipe: [
-                    {initiales: "LEL", nom: "Léa LELOUCHE", role: "Chef de Projet"},
-                    {initiales: "HMA", nom: "Hélène MARCOUX", role: "Expert IA"}
-                ],
-                mots_cles: ["Synthèse Vocale", "Veille", "Audio", "IA"]
+            { 
+                id: "H25016", nom: "WAIOH - HIT", description_courte: "Analyse des solutions de voix de synthèse", statut: "POC", responsable: "LEL", contribution: "Veille", echeance: "N/A", icon: "fas fa-volume-up", image_id: "images/analyse_voix_synth.jpg", progression: 40,
+                description_detaillee: "Veille et POC sur les technologies de voix de synthèse (Text-to-Speech) pour évaluer la qualité et l'intégration des voix générées dans les productions (Projet H.I.T). Les tests se concentrent sur le naturel des intonations et la personnalisation des voix.",
+                equipe: [{initiales: "BLE", nom: "Benoit Leloutre", role: "Innovation Officer"}, {initiales: "TFG", nom: "Thierry Gaulier", role: "Référent IA"}],
+                mots_cles: ["Voix", "Synthèse", "Text-to-Speech", "Audio", "IA"]
             },
-            {
-                id: "H25999",
-                nom: "Remonter budget sur la veille",
-                description_courte: "Permettre de mettre du budget sur la veille pour des expérimentations rapides.",
-                statut: "Parking",
-                responsable: "LEL",
-                contribution: "Veille",
-                echeance: "N/A",
-                icon: "fas fa-euro-sign",
-                image_id: "images/budget_insight.jpg",
-                progression: 0,
+            { 
+                id: "H25017", nom: "Connecteur NDI", description_courte: "Développement d'un connecteur NDI sur l'environnement de production.", statut: "Idée", responsable: "ETRHO", contribution: "Projet", echeance: "N/A", icon: "fas fa-plug", image_id: "images/ndi_connector.jpg", progression: 5,
+                description_detaillee: "Idée de projet visant à créer un connecteur pour l'interface NDI (Network Device Interface) afin d'améliorer la flexibilité et la compatibilité des équipements de production sur le réseau IP. Analyse de faisabilité technique à venir.",
+                equipe: [{initiales: "ETRHO", nom: "Eric RHO", role: "Expert Vidéo/Réseau"}],
+                mots_cles: ["NDI", "Production", "Vidéo", "Réseau", "IP"]
+            },
+            { 
+                id: "H25018", nom: "Chatbot vocal sur sources FCR", description_courte: "Chatbot spécialisé sur les sources FCR, accessible vocalement.", statut: "Idée à Analyser", responsable: "LCTH", contribution: "Projet", echeance: "N/A", icon: "fas fa-microphone-alt", image_id: "images/voice_chatbot_fcr.jpg", progression: 10,
+                description_detaillee: "Développement potentiel d'un chatbot vocal capable d'interroger et de synthétiser des informations provenant des sources FCR (Fournisseurs de Contenus et de Ressources). L'objectif est d'accélérer la recherche d'informations opérationnelles. Analyse des technologies vocales requise.",
+                equipe: [{initiales: "LCTH", nom: "Luc CATH", role: "Chef de Projet"}, {initiales: "HMA", nom: "Hugo MAUX", role: "Expert IA"}],
+                mots_cles: ["Chatbot", "Vocal", "FCR", "IA", "Recherche"]
+            },
+            { 
+                id: "H25999", nom: "Remonter budget sur la veille", description_courte: "Permettre de mettre du budget sur la veille pour des expérimentations rapides.", statut: "Parking", responsable: "LEL", contribution: "Veille", echeance: "N/A", icon: "fas fa-euro-sign", image_id: "images/budget_insight.jpg", progression: 0,
                 description_detaillee: "Proposition stratégique visant à sécuriser une enveloppe budgétaire dédiée aux initiatives de veille technologique. L'objectif est de pouvoir financer des POCs très rapides et peu coûteux sans passer par le cycle complet de budgétisation des projets. En attente de validation de la direction.",
-                equipe: [
-                    {initiales: "LEL", nom: "Léa LELOUCHE", role: "Porteur du sujet"},
-                    {initiales: "ABRU", nom: "Alice BRUN", role: "PMO"}
-                ],
-                mots_cles: ["Budget", "Veille", "Financement"]
+                equipe: [{initiales: "LEL", nom: "Laura ELM", role: "Porteur du sujet"}, {initiales: "ABRU", nom: "Alice BRUN", role: "PMO"}],
+                mots_cles: ["Budget", "Veille", "POC", "Gouvernance", "Finance"]
             }
         ];
 
-        // 2. FONCTION POUR RÉCUPÉRER UN PROJET PAR ID
-        function getProjectById(id) {
-            return projectsData.find(project => project.id === id);
+        // Fonction pour déterminer la classe CSS du statut (Corrigé pour Clôturée)
+        function getStatusClass(statut) {
+            if (statut === 'Validé') return 'bg-success';
+            if (statut === 'POC En Cours' || statut === 'En cours' || statut === 'En concept') return 'bg-info';
+            if (statut === 'POC') return 'bg-warning text-dark';
+            if (statut.includes('Idée')) return 'bg-secondary';
+            if (statut === 'Clôturée') return 'bg-dark';
+            if (statut === 'Parking' || statut === 'Non démarré') return 'bg-danger';
+            return 'bg-secondary';
         }
 
-        // 3. FONCTION PRINCIPALE POUR CHARGER LES DÉTAILS DU PROJET
         function loadProjectDetails() {
-            // Récupère l'ID du projet depuis l'URL (ex: fiche-projet.html?id=H25001)
+            // 1. Récupérer l'ID du projet depuis l'URL
             const urlParams = new URLSearchParams(window.location.search);
             const projectId = urlParams.get('id');
 
             if (!projectId) {
-                // Gérer le cas où aucun ID n'est fourni
-                document.getElementById('project-nom').textContent = "Erreur: Projet non spécifié";
-                document.getElementById('project-description-courte').textContent = "Veuillez naviguer depuis la page de registre.";
+                document.getElementById('project-nom').textContent = "Erreur: ID de projet manquant.";
                 return;
             }
 
-            const project = getProjectById(projectId);
+            // 2. Trouver le projet correspondant
+            const project = projectsData.find(p => p.id === projectId);
 
             if (!project) {
-                // Gérer le cas où l'ID n'est pas trouvé
-                document.getElementById('project-nom').textContent = `Erreur: Projet ${projectId} introuvable`;
-                document.getElementById('project-description-courte').textContent = "L'identifiant du projet ne correspond à aucune entrée.";
+                document.getElementById('project-nom').textContent = `Erreur: Projet avec ID ${projectId} non trouvé.`;
                 return;
             }
             
-            // 4. MISE À JOUR DES INFORMATIONS GÉNÉRALES
-            document.getElementById('page-title').textContent = `Fiche Projet: ${project.nom}`;
+            // 3. AFFICHAGE DES DÉTAILS DE BASE
+            document.getElementById('page-title').textContent = `Fiche Projet - ${project.nom}`;
             document.getElementById('project-nom').textContent = project.nom;
             document.getElementById('project-description-courte').textContent = project.description_courte;
             document.getElementById('project-description-detaillee').textContent = project.description_detaillee;
-            document.getElementById('project-date-demarrage').textContent = project.date_demarrage || 'N/A';
-            document.getElementById('project-echeance').textContent = project.echeance || 'N/A';
+            document.getElementById('project-echeance').textContent = project.echeance || "N/A";
             document.getElementById('project-contribution').textContent = project.contribution;
-            document.getElementById('project-id-top-display').textContent = `ID: ${project.id}`;
+            document.getElementById('project-id-info').textContent = project.id;
+            document.getElementById('project-id-top-display').textContent = project.id;
             
-            // 4.1 MISE À JOUR DU RESPONSABLE (Nom complet + Initiales)
-            const responsableMember = project.equipe.find(member => member.initiales === project.responsable);
-            if (responsableMember) {
-                 document.getElementById('project-responsable').textContent = `${responsableMember.nom} (${project.responsable})`;
-            } else {
-                 document.getElementById('project-responsable').textContent = `${project.responsable} (Nom À définir)`;
-            }
-
-            // 4.2 GESTION DU STATUT
+            // AFFICHAGE DU STATUT (Badge)
             const statusBadge = document.getElementById('project-status-badge');
-            statusBadge.textContent = project.statut;
-            statusBadge.className = 'badge rounded-pill';
-            
-            let statusClass;
-            switch (project.statut) {
-                case 'En cours': statusClass = 'bg-primary'; break;
-                case 'Terminé': statusClass = 'bg-success'; break;
-                case 'POC': statusClass = 'bg-info'; break;
-                case 'Parking':
-                case 'Non démarré': statusClass = 'bg-secondary'; break;
-                case 'Idée à Analyser': 
-                case 'Idée': statusClass = 'bg-warning text-dark'; break;
-                default: statusClass = 'bg-dark';
-            }
-            statusBadge.classList.add(statusClass);
+            const statusClass = getStatusClass(project.statut);
+            statusBadge.innerHTML = `<span class="badge rounded-pill ${statusClass} fs-6">${project.statut}</span>`;
 
-            // 4.3 GESTION DE L'ILLUSTRATION
+
+            // 4. GESTION DE L'IMAGE DE HAUT DE PAGE
             const headerImageContainer = document.getElementById('project-header-image');
-            headerImageContainer.innerHTML = '';
-            if (project.image_id && project.image_id !== 'images/placeholder.jpg') {
+            if (project.image_id) {
                 headerImageContainer.innerHTML = `<img src="${project.image_id}" alt="Illustration du projet ${project.nom}" class="header-illustration">`;
             } else {
-                headerImageContainer.innerHTML = `
-                    <div class="header-illustration-placeholder">
-                        <i class="${project.icon || 'fas fa-rocket'} fa-4x mb-3"></i>
-                        <p class="mb-0">Aucune illustration fournie</p>
-                    </div>
-                `;
+                headerImageContainer.innerHTML = `<div class="header-illustration-placeholder"><i class="${project.icon} fa-5x"></i><p class="mt-3 small">Vignette indisponible</p></div>`;
             }
 
-            // 5. GESTION DE LA PROGRESSION
+
+            // 5. GESTION DE LA BARRE DE PROGRESSION
             const progressBarFill = document.getElementById('progress-bar-fill');
             const progressBarText = document.getElementById('progress-bar-text');
             const progression = project.progression;
@@ -664,13 +421,15 @@
             progressBarFill.setAttribute('aria-valuenow', progression);
             progressBarText.textContent = `${progression}%`;
 
-            let barClass = 'bg-secondary';
-            if (progression === 100) { barClass = 'bg-success'; }
-            else if (progression > 60) { barClass = 'bg-info'; }
-            else if (progression > 0) { barClass = 'bg-primary'; }
+            // Style de la barre de progression selon le statut/progression
+            let barClass = 'bg-primary';
+            if (progression === 100) {
+                barClass = 'bg-success';
+            } else if (progression > 0 && progression < 20) {
+                barClass = 'bg-warning text-dark';
+            }
+            progressBarFill.className = `progress-bar ${barClass}`;
             
-            progressBarFill.classList.add(barClass);
-
             // 6. GESTION DE L'ÉQUIPE
             const teamListContainer = document.getElementById('team-members-list');
             teamListContainer.innerHTML = '';
@@ -678,13 +437,9 @@
             project.equipe.forEach(member => {
                 const isResponsible = member.initiales === project.responsable;
                 
-                // Définir la première lettre pour la couleur de l'avatar. 
-                // Utilise la première initiale ou 'À' si "À définir"
-                const avatarInitial = (member.initiales === "A DEFINIR" ? 'À' : member.initiales.charAt(0)).toUpperCase();
-                
                 const memberHtml = `
                     <div class="team-member d-flex align-items-center mb-3">
-                        <div class="avatar" data-initials="${avatarInitial}">${member.initiales}</div>
+                        <div class="avatar" data-initials="${member.initiales.charAt(0)}">${member.initiales}</div>
                         <div>
                             <strong class="text-dark">${member.nom}</strong>
                             <div class="role small text-muted">${member.role} ${isResponsible ? ' (Responsable Principal)' : ''}</div>
